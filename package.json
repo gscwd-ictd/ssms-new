@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@better-fetch/fetch": "^1.1.12",
     "better-auth": "^1.1.8",
     "drizzle-orm": "^0.38.3",
     "hono": "^4.6.15",
