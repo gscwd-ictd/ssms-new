@@ -2,9 +2,9 @@ import { healthcheckHandler } from "@ssms/server/handlers/healthcheck";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-const app = new Hono().basePath("/api");
+const app = new Hono().basePath("/api/v1");
 
-const routes = app.route("v1/healthcheck", healthcheckHandler);
+const routes = app.route("healthcheck", healthcheckHandler);
 
 export const GET = handle(app);
 export const POST = handle(app);
