@@ -8,6 +8,13 @@
       "when": 1735826036279,
       "tag": "0000_true_captain_britain",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1735836078499,
+      "tag": "0001_lying_mandroid",
+      "breakpoints": true
     }
   ]
 }

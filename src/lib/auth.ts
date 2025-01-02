@@ -14,6 +14,32 @@ export const auth = betterAuth({
       verification: verification,
     },
   }),
+
+  user: {
+    additionalFields: {
+      role: {
+        required: true,
+        type: "string",
+        fieldName: "role",
+        defaultValue: "user",
+      },
+    },
+  },
+
+  advanced: {
+    cookiePrefix: "ssms",
+  },
+
+  trustedOrigins: ["http://192.168.0.39:3000"],
+
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // Cache duration in seconds
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,

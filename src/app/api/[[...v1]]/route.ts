@@ -4,6 +4,7 @@ import { handle } from "hono/vercel";
 
 const app = new Hono().basePath("/api/v1");
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app.route("healthcheck", healthcheckHandler);
 
 export const GET = handle(app);
