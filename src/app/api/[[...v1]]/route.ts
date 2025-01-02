@@ -1,11 +1,12 @@
 import { healthcheckHandler } from "@ssms/server/handlers/healthcheck";
+import { testHandler } from "@ssms/server/handlers/test";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
 const app = new Hono().basePath("/api/v1");
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routes = app.route("healthcheck", healthcheckHandler);
+const routes = app.route("healthcheck", healthcheckHandler).route("office", testHandler);
 
 export const GET = handle(app);
 export const POST = handle(app);

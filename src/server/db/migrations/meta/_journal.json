@@ -15,6 +15,20 @@
       "when": 1735836078499,
       "tag": "0001_lying_mandroid",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735838824052,
+      "tag": "0002_strange_wendell_vaughn",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1735839724946,
+      "tag": "0003_huge_sprite",
+      "breakpoints": true
     }
   ]
 }

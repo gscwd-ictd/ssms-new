@@ -23,6 +23,21 @@ export const auth = betterAuth({
         fieldName: "role",
         defaultValue: "user",
       },
+      office: {
+        required: true,
+        type: "string",
+        fieldName: "office",
+      },
+      department: {
+        required: true,
+        type: "string",
+        fieldName: "department",
+      },
+      division: {
+        required: true,
+        type: "string",
+        fieldName: "division",
+      },
     },
   },
 

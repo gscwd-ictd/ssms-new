@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, boolean, varchar, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, pgEnum } from "drizzle-orm/pg-core";
+import { department, division, office } from "./org";
 
 export const roleEnum = pgEnum("roles", ["support", "user"]);
 
@@ -9,6 +10,9 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
   image: text("image"),
+  office: text("office_id").references(() => office.id),
+  department: text("department_id").references(() => department.id),
+  division: text("division_id").references(() => division.id),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
 });
