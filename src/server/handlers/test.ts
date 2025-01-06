@@ -1,13 +1,13 @@
 import { db } from "@ssms/lib/drizzle";
 import { Hono } from "hono";
-import { department, division, office } from "../db/schemas/org";
+import { division, office, department } from "../db/schemas/org";
 
 export const testHandler = new Hono().post("/", async (c) => {
   const newOffice = await db
     .insert(division)
     .values({
-      departmentId: "vkvegmanffdwqkraguxlpxwfaxyc",
-      name: "Environment and Watershed Protection Division",
+      departmentId: "uefglvaisbhybmilfobpcakhjlsv",
+      name: "Information and Communications Technology Department",
     })
     .returning({
       id: division.id,
