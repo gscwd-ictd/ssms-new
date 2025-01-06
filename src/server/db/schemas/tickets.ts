@@ -1,6 +1,8 @@
 import { generateRandomString } from "better-auth/crypto";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+
+export const statusEnum = pgEnum("status", ["open", "closed", "ongoing", "cancelled", "resolved"]);
 
 export const categories = pgTable("categories", {
   id: text("id")
@@ -37,11 +39,13 @@ export const tickets = pgTable("tickets", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => generateRandomString(28, "a-z", "A-Z", "0-9")),
-  userId: text("user_id").references(() => user.id),
+  requestorId: text("requestor_id").references(() => user.id),
+  assignedId: text("assigned_id").references(() => user.id),
   categoryId: text("category_id").references(() => categories.id),
   subCategoryId: text("sub_category_id").references(() => subCategories.id),
   supportTypeId: text("support_type_id").references(() => supportTypes.id),
   details: text("details").notNull(),
+  status: statusEnum("status").default("open").notNull(),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }),
 });
