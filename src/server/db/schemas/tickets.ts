@@ -10,8 +10,8 @@ export const categories = pgTable("categories", {
     .$defaultFn(() => generateRandomString(28, "a-z", "A-Z", "0-9")),
   name: text("name").notNull(),
   description: text("description"),
-  createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp({ mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdateFn(() => new Date()),
 });
 
 export const subCategories = pgTable("sub_categories", {
@@ -21,8 +21,8 @@ export const subCategories = pgTable("sub_categories", {
   categoryId: text("category_id").references(() => categories.id),
   name: text("name").notNull(),
   description: text("description"),
-  createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp({ mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdateFn(() => new Date()),
 });
 
 export const supportTypes = pgTable("support_types", {
@@ -31,8 +31,8 @@ export const supportTypes = pgTable("support_types", {
     .$defaultFn(() => generateRandomString(28, "a-z", "A-Z", "0-9")),
   name: text("name").notNull(),
   description: text("description"),
-  createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp({ mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdateFn(() => new Date()),
 });
 
 export const tickets = pgTable("tickets", {
@@ -46,8 +46,8 @@ export const tickets = pgTable("tickets", {
   supportTypeId: text("support_type_id").references(() => supportTypes.id),
   details: text("details").notNull(),
   status: statusEnum("status").default("open").notNull(),
-  createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp({ mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdateFn(() => new Date()),
 });
 
 export const comments = pgTable("comments", {
@@ -57,6 +57,6 @@ export const comments = pgTable("comments", {
   userId: text("user_id").references(() => user.id),
   ticketId: text("ticket_id").references(() => tickets.id),
   details: text("details").notNull(),
-  createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp({ mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdateFn(() => new Date()),
 });
