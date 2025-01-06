@@ -29,6 +29,13 @@
       "when": 1735839724946,
       "tag": "0003_huge_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1736144208098,
+      "tag": "0004_powerful_lorna_dane",
+      "breakpoints": true
     }
   ]
 }
