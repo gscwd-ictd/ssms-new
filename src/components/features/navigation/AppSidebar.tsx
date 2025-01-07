@@ -9,30 +9,23 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  // SidebarMenuBadge,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@ssms/components/ui/sidebar";
 import { authClient } from "@ssms/lib/authCient";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ChartNoAxesCombined,
-  FilePen,
-  Folder,
-  Hammer,
-  Settings,
-  SquareDashedMousePointer,
-  User,
-} from "lucide-react";
-import Link from "next/link";
+import { FilePen, Folder, Hammer, Settings, SquareDashedMousePointer, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 const mainItems = [
   {
     title: "Dashboard",
     url: "/dashboard",
-    icon: ChartNoAxesCombined,
+    icon: SquareDashedMousePointer,
   },
   {
     title: "Tickets",
@@ -62,26 +55,33 @@ const configItems = [
     url: "/support-types",
     icon: Hammer,
   },
-  {
-    title: "Organization",
-    url: "/offices",
-    icon: SquareDashedMousePointer,
-  },
 ];
 
 export const AppSidebar: FunctionComponent = () => {
   const pathname = usePathname();
 
-  const { data } = useQuery({
+  const { data: session } = useQuery({
     queryKey: ["get-session-details"],
     queryFn: async () => {
-      return await authClient.getSession();
+      return (await authClient.getSession()).data;
     },
   });
 
   return (
     <Sidebar>
-      <SidebarHeader>{/** Write something here */}</SidebarHeader>
+      <SidebarHeader>
+        <div className="p-2 flex items-center gap-1">
+          <Image
+            className="dark:invert"
+            src="/ticketly.svg"
+            alt="Next.js logo"
+            width={28}
+            height={20}
+            priority
+          />
+          <span className="font-bold tracking-wider">ticket.ly</span>
+        </div>
+      </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
@@ -96,15 +96,13 @@ export const AppSidebar: FunctionComponent = () => {
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
-                  {/* 
-                  <SidebarMenuBadge>1</SidebarMenuBadge> */}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {data?.data?.user.role === "support" && (
+        {session?.user.role === "support" && (
           <SidebarGroup>
             <SidebarGroupLabel className="uppercase font-semibold tracking-widest">
               Configuration

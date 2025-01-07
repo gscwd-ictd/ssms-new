@@ -29,7 +29,6 @@ export default function Tickets() {
 
   return (
     <div>
-      {JSON.stringify(data)}
       <DataTable data={tasks} columns={columns} />
     </div>
   );

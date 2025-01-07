@@ -4,7 +4,7 @@ import React from "react";
 import { type FunctionComponent, type PropsWithChildren, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider as ReactQueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useRQDevtoolsInProd } from "../stores/use-rq-devtools-prod";
+import { useRQDevtoolsInProd } from "../stores/useRQDevtoolsInProd";
 
 const ReactQueryDevtoolsProduction = React.lazy(() =>
   import("@tanstack/react-query-devtools/build/modern/production.js").then((d) => ({
