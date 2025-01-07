@@ -7,7 +7,7 @@ export default function ProtectedPagesLayout({ children }: PropsWithChildren) {
     <SidebarProvider>
       <AppSidebar />
       <div className="w-full">
-        <main className="p-10">{children}</main>
+        <main className="py-10 px-24">{children}</main>
       </div>
     </SidebarProvider>
   );

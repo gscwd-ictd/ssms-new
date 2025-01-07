@@ -9,6 +9,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  // SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@ssms/components/ui/sidebar";
@@ -95,6 +96,8 @@ export const AppSidebar: FunctionComponent = () => {
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
+                  {/* 
+                  <SidebarMenuBadge>1</SidebarMenuBadge> */}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
