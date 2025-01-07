@@ -1,7 +1,7 @@
 import { db } from "@ssms/lib/drizzle";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { department, division } from "../db/schemas/org";
+import { division } from "../db/schemas/org";
 import { zValidator } from "@hono/zod-validator";
 import { DivisionSchema } from "../validations/orgSchemas";
 import { HTTPException } from "hono/http-exception";
