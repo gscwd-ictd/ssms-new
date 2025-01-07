@@ -4,6 +4,7 @@ import { type PropsWithChildren } from "react";
 import "./globals.css";
 import { ThemeProvider } from "@ssms/components/features/theme/ThemeProvider";
 import { Toaster } from "sonner";
+import { QueryClientProvider } from "@ssms/components/features/QueryClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +27,7 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Toaster position="top-center" richColors />
-          {children}
+          <QueryClientProvider>{children}</QueryClientProvider>
         </ThemeProvider>
       </body>
     </html>
