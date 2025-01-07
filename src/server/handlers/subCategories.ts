@@ -1,7 +1,7 @@
 import { db } from "@ssms/lib/drizzle";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { subCategories } from "../db/schemas/tickets";
+import { categories, subCategories } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { SubCategoriesSchema } from "../validations/ticketsSchemas";
@@ -9,7 +9,19 @@ import { SubCategoriesSchema } from "../validations/ticketsSchemas";
 export const subCategoriesHandler = new Hono()
   .get("/", async (c) => {
     try {
-      const stmt = db.select().from(subCategories).prepare("get_all_sub_categories");
+      const stmt = db
+        .select({
+          id: subCategories.id,
+          category: categories.name,
+          subCategory: subCategories.name,
+          description: subCategories.description,
+          createdAt: subCategories.createdAt,
+          updatedAt: subCategories.updatedAt,
+        })
+        .from(subCategories)
+        .innerJoin(categories, eq(subCategories.categoryId, categories.id))
+        .prepare("get_all_sub_categories");
+
       const res = await stmt.execute();
       return c.json(res);
     } catch (error) {

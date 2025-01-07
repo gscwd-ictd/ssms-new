@@ -1,9 +1,9 @@
-import { CategoriesDataTable } from "@ssms/components/features/data-tables/categories/CategoriesDataTable";
+import { CategoriesTable } from "@ssms/components/features/data-tables/categories/CategoriesTable";
 
-export default function Categories() {
+export default function SubCategories() {
   return (
     <>
-      <CategoriesDataTable />
+      <CategoriesTable />
     </>
   );
 }

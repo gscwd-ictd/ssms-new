@@ -17,8 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ChartNoAxesCombined,
   FilePen,
-  FolderGit2,
-  FolderInput,
+  Folder,
   Hammer,
   Settings,
   SquareDashedMousePointer,
@@ -55,12 +54,7 @@ const configItems = [
   {
     title: "Categories",
     url: "/categories",
-    icon: FolderInput,
-  },
-  {
-    title: "Sub-Categories",
-    url: "/sub-categories",
-    icon: FolderGit2,
+    icon: Folder,
   },
   {
     title: "Support Types",
@@ -68,18 +62,8 @@ const configItems = [
     icon: Hammer,
   },
   {
-    title: "Offices",
+    title: "Organization",
     url: "/offices",
-    icon: SquareDashedMousePointer,
-  },
-  {
-    title: "Departments",
-    url: "/departments",
-    icon: SquareDashedMousePointer,
-  },
-  {
-    title: "Divisions",
-    url: "/divisions",
     icon: SquareDashedMousePointer,
   },
 ];

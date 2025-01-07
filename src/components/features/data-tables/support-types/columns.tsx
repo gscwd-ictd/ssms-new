@@ -1,30 +1,19 @@
 import { Badge } from "@ssms/components/ui/badge";
 import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table-column-header";
-import { subCategories } from "@ssms/server/db/schemas/tickets";
+import { supportTypes } from "@ssms/server/db/schemas/tickets";
 import { ColumnDef } from "@tanstack/react-table";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 
-type MutatedSubCategories = Omit<
-  typeof subCategories.$inferSelect,
-  "name" | "categoryId" | "createdAt" | "updatedAt"
-> & {
-  subCategory: string;
-  category: string;
+type MutatedSupportTypes = Omit<typeof supportTypes.$inferSelect, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string | null;
 };
 
-export const subCategoriesColumns: ColumnDef<MutatedSubCategories>[] = [
+export const supportTypesColumns: ColumnDef<MutatedSupportTypes>[] = [
   {
-    accessorKey: "category",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
-    cell: ({ row }) => <div>{row.getValue("category")}</div>,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "subCategory",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Sub Category" />,
-    cell: ({ row }) => <div>{row.getValue("subCategory")}</div>,
+    accessorKey: "name",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    cell: ({ row }) => <div>{row.getValue("name")}</div>,
     enableHiding: false,
   },
   {

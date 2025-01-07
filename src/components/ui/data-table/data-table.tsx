@@ -27,6 +27,7 @@ type DataTableProps<T> = {
   enableColumnVisibilityToggle?: boolean;
   enableGlobalFilter?: boolean;
   enablePagination?: boolean;
+  pageSize?: number;
   loading?: boolean;
 };
 
@@ -44,13 +45,14 @@ export function DataTable<T>({
   enableColumnVisibilityToggle = true,
   enableGlobalFilter = true,
   enablePagination = true,
+  pageSize = 10,
   loading = false,
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 });
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize });
 
   const table = useReactTable({
     data,
