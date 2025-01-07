@@ -236,7 +236,7 @@
 "use client";
 
 import { ErrorContext } from "@better-fetch/fetch";
-import { authClient } from "@ssms/lib/auth-client";
+import { authClient } from "@ssms/lib/authCient";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
