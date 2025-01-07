@@ -11,6 +11,7 @@ export const ticketsHandler = new Hono()
     try {
       const stmt = db.select().from(tickets).prepare("get_all_tickets");
       const res = await stmt.execute();
+
       return c.json(res);
     } catch (error) {
       console.error(error);

@@ -6,7 +6,7 @@ import { zValidator } from "@hono/zod-validator";
 import { OfficeSchema } from "../validations/orgSchemas";
 import { HTTPException } from "hono/http-exception";
 
-export const officeHandler = new Hono()
+export const officesHandler = new Hono()
   .get("/", async (c) => {
     try {
       const stmt = db.select().from(office).prepare("get_all_offices");

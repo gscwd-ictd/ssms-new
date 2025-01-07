@@ -6,7 +6,7 @@ import { zValidator } from "@hono/zod-validator";
 import { DivisionSchema } from "../validations/orgSchemas";
 import { HTTPException } from "hono/http-exception";
 
-export const divisionHandler = new Hono()
+export const divisionsHandler = new Hono()
   .get("/", async (c) => {
     try {
       const stmt = db.select().from(division).prepare("get_all_divisions");

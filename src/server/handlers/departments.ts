@@ -6,7 +6,7 @@ import { zValidator } from "@hono/zod-validator";
 import { DepartmentSchema } from "../validations/orgSchemas";
 import { HTTPException } from "hono/http-exception";
 
-export const departmentHandler = new Hono()
+export const departmentsHandler = new Hono()
   .get("/", async (c) => {
     try {
       const stmt = db.select().from(department).prepare("get_all_departments");
