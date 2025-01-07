@@ -1,4 +1,4 @@
-import { AppSidebar } from "@ssms/components/features/layouts/AppSidebar";
+import { AppSidebar } from "@ssms/components/features/navigation/AppSidebar";
 import { SidebarProvider } from "@ssms/components/ui/sidebar";
 import { PropsWithChildren } from "react";
 
@@ -6,7 +6,9 @@ export default function ProtectedPagesLayout({ children }: PropsWithChildren) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="w-full p-10">{children}</main>
+      <div className="w-full">
+        <main className="p-10">{children}</main>
+      </div>
     </SidebarProvider>
   );
 }
