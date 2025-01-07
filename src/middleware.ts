@@ -22,6 +22,7 @@ export async function middleware(req: NextRequest) {
     if (isAuthRoute || isPasswordRoute) {
       return NextResponse.next();
     }
+
     return NextResponse.redirect(new URL("/signin", req.url));
   }
 

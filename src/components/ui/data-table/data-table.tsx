@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  PaginationState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -15,87 +14,144 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ssms/components/ui/table";
-
 import { DataTablePagination } from "./data-table-pagination";
+import { Input } from "@ssms/components/ui/input";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { createContext, useState } from "react";
+import { LoadingSpinner } from "@ssms/components/ui/loading-spinner";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+type DataTableProps<T> = {
+  columns: Array<ColumnDef<T, unknown>>;
+  data: T[];
+  enableColumnVisibilityToggle?: boolean;
+  enableGlobalFilter?: boolean;
+  enablePagination?: boolean;
+  loading?: boolean;
+};
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+type ColumnVisibilityToggleContextState = {
+  enableColumnVisibilityToggle?: boolean;
+};
+
+export const ColumnVisibilityToggleContext = createContext<ColumnVisibilityToggleContextState>({
+  enableColumnVisibilityToggle: undefined,
+});
+
+export function DataTable<T>({
+  columns,
+  data,
+  enableColumnVisibilityToggle = true,
+  enableGlobalFilter = true,
+  enablePagination = true,
+  loading = false,
+}: DataTableProps<T>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 });
 
   const table = useReactTable({
     data,
     columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    onSortingChange: setSorting,
+    onRowSelectionChange: setRowSelection,
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    onPaginationChange: setPagination,
+    state: {
+      sorting,
+      rowSelection,
+      columnFilters,
+      globalFilter,
+      pagination,
+    },
   });
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+      <ColumnVisibilityToggleContext.Provider value={{ enableColumnVisibilityToggle }}>
+        <div className="flex items-center gap-2">
+          {enableGlobalFilter && (
+            <div className="relative flex w-96 items-center">
+              <Input
+                placeholder="Search from table..."
+                value={globalFilter ?? ""}
+                onChange={(event) => setGlobalFilter(event.target.value)}
+                className="min-w-96"
+              />
+            </div>
+          )}
+
+          <DataTableToolbar table={table} />
+        </div>
+      </ColumnVisibilityToggleContext.Provider>
+
+      <div>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {!loading ? (
+                table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="max-w-[30rem] truncate">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="flex h-24 w-full items-center justify-center gap-2"
+                  >
+                    <LoadingSpinner /> <span>Loading data...</span>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {enablePagination && (
+          <div className="pb-10 pt-4">
+            <DataTablePagination table={table} />
+          </div>
+        )}
       </div>
-      <DataTablePagination table={table} />
     </div>
   );
 }

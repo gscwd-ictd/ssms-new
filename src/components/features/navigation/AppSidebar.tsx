@@ -12,12 +12,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@ssms/components/ui/sidebar";
-import { Calendar, ChartNoAxesCombined, FilePen, Settings, User } from "lucide-react";
+import { authClient } from "@ssms/lib/authCient";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ChartNoAxesCombined,
+  FilePen,
+  FolderGit2,
+  FolderInput,
+  Hammer,
+  Settings,
+  SquareDashedMousePointer,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
 
-const navItems = [
+const mainItems = [
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -27,11 +38,6 @@ const navItems = [
     title: "Tickets",
     url: "/tickets",
     icon: FilePen,
-  },
-  {
-    title: "Calendar",
-    url: "/calendar",
-    icon: Calendar,
   },
   {
     title: "Profile",
@@ -45,8 +51,48 @@ const navItems = [
   },
 ];
 
+const configItems = [
+  {
+    title: "Categories",
+    url: "/categories",
+    icon: FolderInput,
+  },
+  {
+    title: "Sub-Categories",
+    url: "/sub-categories",
+    icon: FolderGit2,
+  },
+  {
+    title: "Support Types",
+    url: "/support-types",
+    icon: Hammer,
+  },
+  {
+    title: "Offices",
+    url: "/offices",
+    icon: SquareDashedMousePointer,
+  },
+  {
+    title: "Departments",
+    url: "/departments",
+    icon: SquareDashedMousePointer,
+  },
+  {
+    title: "Divisions",
+    url: "/divisions",
+    icon: SquareDashedMousePointer,
+  },
+];
+
 export const AppSidebar: FunctionComponent = () => {
   const pathname = usePathname();
+
+  const { data } = useQuery({
+    queryKey: ["get-session-details"],
+    queryFn: async () => {
+      return await authClient.getSession();
+    },
+  });
 
   return (
     <Sidebar>
@@ -54,12 +100,10 @@ export const AppSidebar: FunctionComponent = () => {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="uppercase font-semibold tracking-widest">
-            Application
-          </SidebarGroupLabel>
+          <SidebarGroupLabel className="uppercase font-semibold tracking-widest">General</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
+              {mainItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.url.includes(pathname)}>
                     <Link href={item.url}>
@@ -72,6 +116,28 @@ export const AppSidebar: FunctionComponent = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {data?.data?.user.role === "support" && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="uppercase font-semibold tracking-widest">
+              Configuration
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {configItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={item.url.includes(pathname)}>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter>{/** Write something here */}</SidebarFooter>
