@@ -4,7 +4,7 @@ import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AcceptTicketBadge } from "./AcceptTicketBadge";
-import { ArrowBigUpDash, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 type MutatedTickets = {
   id: string;
