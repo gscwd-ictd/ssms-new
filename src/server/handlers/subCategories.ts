@@ -121,4 +121,26 @@ export const subCategoriesHandler = new Hono()
       console.error(error);
       throw new HTTPException(401, { message: "Something went wrong!", cause: error });
     }
+  })
+  .get("/categories/:id", async (c) => {
+    const categoryId = c.req.param("id");
+
+    try {
+      const stmt = db
+        .select({
+          id: subCategories.id,
+          name: subCategories.name,
+          description: subCategories.description,
+        })
+        .from(subCategories)
+        .where(eq(subCategories.categoryId, categoryId))
+        .prepare("get_subcategory_by_category_id");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+    }
   });

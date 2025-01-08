@@ -12,11 +12,13 @@ export const ticketsHandler = new Hono()
     try {
       const assignee = aliasedTable(user, "asignee");
 
-      const res = await db
+      const stmt = db
         .select({
           id: tickets.id,
           requestedBy: user.name,
+          requestedByAvatar: user.image,
           assignedTo: assignee.name,
+          assignedToAvatar: assignee.image,
           details: tickets.details,
           status: tickets.status,
           createdAt: tickets.createdAt,
@@ -24,7 +26,10 @@ export const ticketsHandler = new Hono()
         })
         .from(tickets)
         .innerJoin(user, eq(user.id, tickets.requestorId))
-        .leftJoin(assignee, eq(assignee.id, tickets.assignedId));
+        .leftJoin(assignee, eq(assignee.id, tickets.assignedId))
+        .prepare("get_all_tickets");
+
+      const res = await stmt.execute();
 
       return c.json(res);
     } catch (error) {

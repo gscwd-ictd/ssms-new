@@ -7,6 +7,7 @@ import { officesHandler } from "@ssms/server/handlers/offices";
 import { subCategoriesHandler } from "@ssms/server/handlers/subCategories";
 import { supportTypesHandler } from "@ssms/server/handlers/supportTypes";
 import { ticketsHandler } from "@ssms/server/handlers/tickets";
+import { usersHandler } from "@ssms/server/handlers/users";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -22,7 +23,8 @@ const routes = app
   .route("/sub-categories", subCategoriesHandler)
   .route("/support-types", supportTypesHandler)
   .route("/tickets", ticketsHandler)
-  .route("/comments", commentsHandler);
+  .route("/comments", commentsHandler)
+  .route("/users", usersHandler);
 
 export const GET = handle(app);
 export const POST = handle(app);

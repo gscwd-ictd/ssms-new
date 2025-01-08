@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@ssms/components/features/theme/ThemeProvider";
 import { Toaster } from "sonner";
 import { QueryClientProvider } from "@ssms/components/features/QueryClientProvider";
+import { TooltipProvider } from "@ssms/components/ui/tooltip";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,9 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Toaster position="top-center" richColors />
-          <QueryClientProvider>{children}</QueryClientProvider>
+          <TooltipProvider>
+            <QueryClientProvider>{children}</QueryClientProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

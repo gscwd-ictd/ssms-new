@@ -1,9 +1,17 @@
-import { SupportTypesTable } from "@ssms/components/features/data-tables/support-types/SupportTypesTable";
+import { SupportTypesTable } from "@ssms/components/features/dataTables/supportTypes/SupportTypesTable";
+import { Button } from "@ssms/components/ui/button";
 
 export default function SupportTypes() {
   return (
-    <>
-      <SupportTypesTable />
-    </>
+    <div className="flex flex-col gap-7">
+      <header className="py-7 flex items-center justify-between">
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">Support Types</h1>
+        <Button variant="secondary">Create New</Button>
+      </header>
+
+      <main>
+        <SupportTypesTable />
+      </main>
+    </div>
   );
 }

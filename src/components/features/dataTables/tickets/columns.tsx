@@ -1,10 +1,14 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@ssms/components/ui/avatar";
+import { Badge } from "@ssms/components/ui/badge";
 import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table-column-header";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 
 type MutatedTickets = {
   requestedBy: string;
+  requestedByAvatar: string | null;
   assignedTo: string | null;
+  assignedToAvatar: string | null;
   details: string;
   status: string;
   createdAt: string;
@@ -15,7 +19,17 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
   {
     accessorKey: "requestedBy",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Requested by" />,
-    cell: ({ row }) => <div>{row.getValue("requestedBy")}</div>,
+    cell: ({ row }) => (
+      <div className="flex items-center gap-3">
+        <Avatar className="h-8 w-8">
+          <AvatarImage src={row.original.requestedByAvatar!} className="object-cover" />
+          <AvatarFallback className="font-semibold text-lg">
+            {row.original.requestedBy.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+        <span className="font-semibold">{row.original.requestedBy}</span>
+      </div>
+    ),
     enableHiding: false,
   },
   {
@@ -28,13 +42,17 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
   {
     accessorKey: "assignedTo",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Assigned to" />,
-    cell: ({ row }) => <div>{row.getValue("assignedTo")}</div>,
+    cell: ({ row }) => (
+      <div>
+        {!row.getValue("assignedTo") ? <Badge variant="destructive">None</Badge> : row.getValue("assignedTo")}
+      </div>
+    ),
     enableHiding: false,
   },
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-    cell: ({ row }) => <div>{row.getValue("status")}</div>,
+    cell: ({ row }) => <span className="capitalize">{row.getValue("status")}</span>,
     enableHiding: false,
   },
   {

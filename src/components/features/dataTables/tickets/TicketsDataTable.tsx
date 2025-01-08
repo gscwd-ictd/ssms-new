@@ -18,8 +18,6 @@ export const TicketsDataTable: FunctionComponent = () => {
         throw tickets;
       }
 
-      console.log(tickets);
-
       return tickets;
     },
   });

@@ -73,9 +73,10 @@ export const AppSidebar: FunctionComponent = () => {
           <Image
             className="dark:invert"
             src="/ticketly.svg"
-            alt="Next.js logo"
-            width={28}
-            height={20}
+            alt="ticketly logo"
+            width={0}
+            height={0}
+            style={{ width: "auto", height: "auto" }}
             priority
           />
           <span className="font-bold tracking-wider">ticket.ly</span>

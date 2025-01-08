@@ -6,6 +6,7 @@ import { officesHandler } from "@ssms/server/handlers/offices";
 import { subCategoriesHandler } from "@ssms/server/handlers/subCategories";
 import { supportTypesHandler } from "@ssms/server/handlers/supportTypes";
 import { ticketsHandler } from "@ssms/server/handlers/tickets";
+import { usersHandler } from "@ssms/server/handlers/users";
 import { hc } from "hono/client";
 
 export const $offices = hc<typeof officesHandler>("/api/v1/offices");
@@ -23,3 +24,5 @@ export const $supportTypes = hc<typeof supportTypesHandler>("/api/v1/support-typ
 export const $tickets = hc<typeof ticketsHandler>("/api/v1/tickets");
 
 export const $comments = hc<typeof commentsHandler>("/api/v1/comments");
+
+export const $users = hc<typeof usersHandler>("/api/v1/users");

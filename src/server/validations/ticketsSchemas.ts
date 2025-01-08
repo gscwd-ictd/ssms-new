@@ -17,8 +17,8 @@ export const SupportTypesSchema = z.object({
 });
 
 export const TicketsSchema = z.object({
-  requestorId: z.string(), // managed by better-auth
-  assignedId: z.string().optional(), // managed by better-auth
+  requestorId: z.string(),
+  assignedId: z.string().optional(),
   categoryId: z.string().min(28).optional(),
   subCategoryId: z.string().min(28).optional(),
   supportTypeId: z.string().min(28).optional(),
