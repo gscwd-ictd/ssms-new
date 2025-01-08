@@ -3,8 +3,11 @@ import { Badge } from "@ssms/components/ui/badge";
 import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table-column-header";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
+import { AcceptTicketBadge } from "./AcceptTicketBadge";
+import { ArrowBigUpDash, ArrowUp } from "lucide-react";
 
 type MutatedTickets = {
+  id: string;
   requestedBy: string;
   requestedByAvatar: string | null;
   assignedTo: string | null;
@@ -21,7 +24,7 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Requested by" />,
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <Avatar className="h-8 w-8">
+        <Avatar className="h-7 w-7">
           <AvatarImage src={row.original.requestedByAvatar!} className="object-cover" />
           <AvatarFallback className="font-semibold text-lg">
             {row.original.requestedBy.charAt(0)}
@@ -44,10 +47,34 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Assigned to" />,
     cell: ({ row }) => (
       <div>
-        {!row.getValue("assignedTo") ? <Badge variant="destructive">None</Badge> : row.getValue("assignedTo")}
+        {!row.getValue("assignedTo") ? (
+          <div className="space-x-1">
+            <AcceptTicketBadge ticketId={row.original.id} />
+            <Badge
+              role="button"
+              variant="outline"
+              className="text-xs space-x-1"
+              onClick={() => alert("assigned to someone else!")}
+            >
+              <ArrowUp className="h-3 w-3" />
+              <span className="font-bold">Assign</span>
+            </Badge>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <Avatar className="h-7 w-7">
+              <AvatarImage src={row.original.assignedToAvatar!} className="object-cover" />
+              <AvatarFallback className="font-semibold text-lg">
+                {row.original.assignedTo?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="font-semibold">{row.original.assignedTo}</span>
+          </div>
+        )}
       </div>
     ),
     enableHiding: false,
+    enableColumnFilter: false,
   },
   {
     accessorKey: "status",
@@ -58,8 +85,8 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
   {
     accessorKey: "createdAt",
     accessorFn: (row) => <>{row.createdAt ? formatDistanceToNow(row.createdAt, { addSuffix: true }) : ""}</>,
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Created at" />,
-    cell: ({ row }) => <div>{row.getValue("createdAt")}</div>,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Requested at" />,
+    cell: ({ row }) => <div className="text-muted-foreground">{row.getValue("createdAt")}</div>,
     sortingFn: "datetime",
     enableSorting: true,
     enableHiding: false,

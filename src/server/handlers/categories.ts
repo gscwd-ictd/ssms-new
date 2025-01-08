@@ -2,7 +2,7 @@ import { db } from "@ssms/lib/drizzle";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { categories } from "../db/schemas/tickets";
+import { categories, subCategories } from "../db/schemas/tickets";
 import { zValidator } from "@hono/zod-validator";
 import { CategoriesSchema } from "../validations/ticketsSchemas";
 
@@ -99,6 +99,28 @@ export const categoriesHandler = new Hono()
       return res.rowCount === 0
         ? c.json({ status: "No rows affected!" })
         : c.json({ status: "Successfully deleted!" });
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .get("/misc/pair", async (c) => {
+    try {
+      const stmt = db
+        .select({
+          id: subCategories.id,
+          category: subCategories.name,
+          subCategory: subCategories.name,
+          description: subCategories.description,
+          createdAt: subCategories.createdAt,
+          updatedAt: subCategories.updatedAt,
+        })
+        .from(categories)
+        .innerJoin(subCategories, eq(subCategories.categoryId, categories.id))
+        .prepare("get_all_categories_sub_categories_pair");
+
+      const res = await stmt.execute();
+      return c.json(res);
     } catch (error) {
       console.error(error);
       throw new HTTPException(401, { message: "Something went wrong!", cause: error });

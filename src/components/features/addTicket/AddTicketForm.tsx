@@ -13,10 +13,10 @@ import {
 } from "@ssms/components/ui/command";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ssms/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@ssms/components/ui/popover";
-import { $categories, $subCategories, $users } from "@ssms/lib/rpcClient";
+import { $categories, $subCategories, $supportTypes, $tickets, $users } from "@ssms/lib/rpcClient";
 import { cn } from "@ssms/lib/shadcn";
-import { TicketsSchema } from "@ssms/server/validations/ticketsSchemas";
-import { useQuery } from "@tanstack/react-query";
+import { AddSupportTicketsFormSchema, TicketsSchema } from "@ssms/server/validations/ticketsSchemas";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronsUpDown } from "lucide-react";
 import { FunctionComponent, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,21 +24,43 @@ import Image from "next/image";
 import { z } from "zod";
 import { Textarea } from "@ssms/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ssms/components/ui/select";
+import { toast } from "sonner";
 
-export const AddTicketForm: FunctionComponent = () => {
+type AddTicketFormProps = {
+  setDialogOpen: (open: boolean) => void;
+};
+
+export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialogOpen }) => {
   const [selectedUserAvatar, setSelectedUserAvatar] = useState<string | null>(null);
   const [userListOpen, setUserListOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
+  const queryClient = useQueryClient();
+
   const form = useForm({
-    resolver: zodResolver(TicketsSchema),
+    resolver: zodResolver(AddSupportTicketsFormSchema),
     defaultValues: {
       requestorId: "",
-      assignedId: "",
       categoryId: "",
       subCategoryId: "",
       supportTypeId: "",
       details: "",
+      status: "open",
+    },
+  });
+
+  const { data: supportTypes } = useQuery({
+    queryKey: ["get-all-support_types"],
+    queryFn: async () => {
+      const res = await $supportTypes.index.$get();
+
+      const supportTypes = await res.json();
+
+      if (!res.ok) {
+        throw supportTypes;
+      }
+
+      return supportTypes;
     },
   });
 
@@ -73,9 +95,13 @@ export const AddTicketForm: FunctionComponent = () => {
   });
 
   const { data: subCategories } = useQuery({
-    queryKey: ["get-all-sub-categories-by-category-id"],
+    queryKey: ["get-all-sub-categories-by-category-id", selectedCategory],
     queryFn: async () => {
-      const res = await $subCategories.categories[":id"].$get({ param: { id: selectedCategory } });
+      const res = await $subCategories.categories[":id"].$get({
+        param: {
+          id: selectedCategory,
+        },
+      });
 
       const subCategories = await res.json();
 
@@ -85,11 +111,32 @@ export const AddTicketForm: FunctionComponent = () => {
 
       return subCategories;
     },
-    enabled: !!selectedCategory,
+    enabled: !!form.getValues().categoryId,
   });
 
-  const onSubmit = (data: z.infer<typeof TicketsSchema>) => {
-    console.log(data);
+  const { mutate } = useMutation({
+    mutationKey: ["add-new-ticket"],
+    mutationFn: async (data: z.infer<typeof AddSupportTicketsFormSchema>) => {
+      const res = await $tickets.index.$post({ form: data });
+
+      const newTicket = await res.json();
+
+      if (!res.ok) {
+        throw newTicket;
+      }
+
+      return newTicket;
+    },
+    onSuccess: () => {
+      setDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["get-all-tickets"] });
+      toast.success("Successfully added a new ticket!");
+    },
+    onError: (err) => alert(err.message),
+  });
+
+  const onSubmit = (data: z.infer<typeof AddSupportTicketsFormSchema>) => {
+    mutate(data);
   };
 
   return (
@@ -179,7 +226,13 @@ export const AddTicketForm: FunctionComponent = () => {
               <>
                 <FormItem className="w-full">
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={(e) => {
+                      field.onChange(e);
+                      setSelectedCategory(e);
+                    }}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a category" />
@@ -206,11 +259,9 @@ export const AddTicketForm: FunctionComponent = () => {
                 <FormItem className="w-full">
                   <FormLabel>Sub Category</FormLabel>
                   <Select
-                    onValueChange={() => {
-                      field.onChange();
-                      setSelectedCategory(field.value);
-                    }}
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
+                    disabled={form.getValues().categoryId === ""}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -233,13 +284,39 @@ export const AddTicketForm: FunctionComponent = () => {
 
         <FormField
           control={form.control}
+          name="supportTypeId"
+          render={({ field }) => (
+            <>
+              <FormItem className="w-full">
+                <FormLabel>Support Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a type of support" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {supportTypes?.map((supportType) => (
+                      <SelectItem key={supportType.id} value={supportType.id}>
+                        {supportType.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            </>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="details"
           render={({ field }) => (
             <>
               <FormItem>
                 <FormLabel>Details</FormLabel>
                 <FormControl>
-                  <Textarea rows={7} placeholder="Enter details..." {...field} />
+                  <Textarea rows={5} placeholder="Please describe in details..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -247,8 +324,11 @@ export const AddTicketForm: FunctionComponent = () => {
           )}
         />
 
-        <footer className="mt-7">
-          <Button variant="secondary">Confirm</Button>
+        <footer className="mt-7 flex justify-end gap-1">
+          <Button variant="outline" type="button" onClick={() => setDialogOpen(false)}>
+            Cancel
+          </Button>
+          <Button variant="ghost">Confirm</Button>
         </footer>
       </form>
     </Form>

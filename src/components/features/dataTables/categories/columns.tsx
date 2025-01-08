@@ -14,7 +14,7 @@ type MutatedSubCategories = Omit<
   updatedAt: string | null;
 };
 
-export const subCategoriesColumns: ColumnDef<MutatedSubCategories>[] = [
+export const categoriesColumns: ColumnDef<MutatedSubCategories>[] = [
   {
     accessorKey: "category",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,

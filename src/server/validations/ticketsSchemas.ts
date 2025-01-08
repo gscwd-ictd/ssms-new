@@ -17,12 +17,22 @@ export const SupportTypesSchema = z.object({
 });
 
 export const TicketsSchema = z.object({
-  requestorId: z.string(),
+  requestorId: z.string().min(28),
   assignedId: z.string().optional(),
-  categoryId: z.string().min(28).optional(),
-  subCategoryId: z.string().min(28).optional(),
-  supportTypeId: z.string().min(28).optional(),
-  details: z.string(),
+  categoryId: z.string().optional(),
+  subCategoryId: z.string().optional(),
+  supportTypeId: z.string().optional(),
+  details: z.string().min(1, { message: "Please provide some details" }),
+  status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]).optional(),
+});
+
+export const AddSupportTicketsFormSchema = z.object({
+  requestorId: z.string().min(28),
+  categoryId: z.string().min(28),
+  subCategoryId: z.string().min(28),
+  supportTypeId: z.string().min(28),
+  details: z.string().min(1, { message: "Please provide some details" }),
+  // status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]),
 });
 
 export const CommentsSchema = z.object({

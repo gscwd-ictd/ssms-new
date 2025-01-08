@@ -2,27 +2,27 @@
 
 import { DataTable } from "@ssms/components/ui/data-table/data-table";
 import { FunctionComponent } from "react";
-import { subCategoriesColumns } from "./columns";
+import { categoriesColumns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
-import { $subCategories } from "@ssms/lib/rpcClient";
+import { $categories, $subCategories } from "@ssms/lib/rpcClient";
 
 export const CategoriesTable: FunctionComponent = () => {
   const { data: categories } = useQuery({
     queryKey: ["get-all-categories"],
     queryFn: async () => {
-      const res = await $subCategories.index.$get();
+      const res = await $categories.misc.pair.$get();
 
-      const subCategories = await res.json();
+      const categories = await res.json();
 
       if (!res.ok) {
-        throw subCategories;
+        throw categories;
       }
 
-      return subCategories;
+      return categories;
     },
   });
 
   if (categories) {
-    return <DataTable data={categories} columns={subCategoriesColumns} />;
+    return <DataTable data={categories} columns={categoriesColumns} />;
   }
 };

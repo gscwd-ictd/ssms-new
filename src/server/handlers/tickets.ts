@@ -79,13 +79,13 @@ export const ticketsHandler = new Hono()
       return c.json(res[0]);
     } catch (error) {
       console.error(error);
-      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
-  .patch("/:id", zValidator("form", TicketsSchema.partial()), async (c) => {
+  .patch("/:id", zValidator("json", TicketsSchema.partial()), async (c) => {
     try {
       const ticketId = c.req.param("id");
-      const body = c.req.valid("form");
+      const body = c.req.valid("json");
 
       const stmt = db
         .update(tickets)
