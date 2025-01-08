@@ -1,16 +1,30 @@
 import { db } from "@ssms/lib/drizzle";
-import { eq } from "drizzle-orm";
+import { aliasedTable, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { tickets } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { TicketsSchema } from "../validations/ticketsSchemas";
+import { user } from "../db/schemas/auth";
 
 export const ticketsHandler = new Hono()
   .get("/", async (c) => {
     try {
-      const stmt = db.select().from(tickets).prepare("get_all_tickets");
-      const res = await stmt.execute();
+      const assignee = aliasedTable(user, "asignee");
+
+      const res = await db
+        .select({
+          id: tickets.id,
+          requestedBy: user.name,
+          assignedTo: assignee.name,
+          details: tickets.details,
+          status: tickets.status,
+          createdAt: tickets.createdAt,
+          updatedAt: tickets.updatedAt,
+        })
+        .from(tickets)
+        .innerJoin(user, eq(user.id, tickets.requestorId))
+        .leftJoin(assignee, eq(assignee.id, tickets.assignedId));
 
       return c.json(res);
     } catch (error) {

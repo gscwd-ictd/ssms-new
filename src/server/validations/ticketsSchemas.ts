@@ -18,12 +18,11 @@ export const SupportTypesSchema = z.object({
 
 export const TicketsSchema = z.object({
   requestorId: z.string(), // managed by better-auth
-  assignedId: z.string(), // managed by better-auth
-  categoryId: z.string().min(28),
-  subCategoryId: z.string().min(28),
-  supportTypeId: z.string().min(28),
+  assignedId: z.string().optional(), // managed by better-auth
+  categoryId: z.string().min(28).optional(),
+  subCategoryId: z.string().min(28).optional(),
+  supportTypeId: z.string().min(28).optional(),
   details: z.string(),
-  status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]),
 });
 
 export const CommentsSchema = z.object({
