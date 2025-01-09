@@ -108,12 +108,12 @@ export const categoriesHandler = new Hono()
     try {
       const stmt = db
         .select({
-          id: subCategories.id,
-          category: subCategories.name,
+          id: categories.id,
+          category: categories.name,
           subCategory: subCategories.name,
-          description: subCategories.description,
-          createdAt: subCategories.createdAt,
-          updatedAt: subCategories.updatedAt,
+          description: categories.description,
+          createdAt: categories.createdAt,
+          updatedAt: categories.updatedAt,
         })
         .from(categories)
         .innerJoin(subCategories, eq(subCategories.categoryId, categories.id))

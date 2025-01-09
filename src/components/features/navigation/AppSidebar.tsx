@@ -90,7 +90,7 @@ export const AppSidebar: FunctionComponent = () => {
             <SidebarMenu>
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={item.url.includes(pathname)}>
+                  <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -111,7 +111,7 @@ export const AppSidebar: FunctionComponent = () => {
               <SidebarMenu>
                 {configItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.url.includes(pathname)}>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
                       <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>

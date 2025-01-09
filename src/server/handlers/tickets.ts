@@ -6,6 +6,7 @@ import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { TicketsSchema } from "../validations/ticketsSchemas";
 import { user } from "../db/schemas/auth";
+import { takeUniqueOrThrow } from "../utils/takeUniqueOrThrow";
 
 export const ticketsHandler = new Hono()
   .get("/", async (c) => {
@@ -34,26 +35,17 @@ export const ticketsHandler = new Hono()
       return c.json(res);
     } catch (error) {
       console.error(error);
-      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
   .get("/:id", async (c) => {
-    try {
-      const ticketId = c.req.param("id");
+    const ticketId = c.req.param("id");
 
-      const stmt = db.select().from(tickets).where(eq(tickets.id, ticketId)).prepare("get_ticket_by_id");
+    const stmt = db.select().from(tickets).where(eq(tickets.id, ticketId)).prepare("get_ticket_by_id");
 
-      const res = await stmt.execute();
+    const res = await stmt.execute().then(takeUniqueOrThrow);
 
-      if (res.length === 0) {
-        return c.json({ error: "Not found!" }, 404);
-      }
-
-      return c.json(res[0]);
-    } catch (error) {
-      console.error(error);
-      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
-    }
+    return c.json(res);
   })
   .post("/", zValidator("form", TicketsSchema), async (c) => {
     try {
@@ -108,7 +100,7 @@ export const ticketsHandler = new Hono()
       return c.json(res[0]);
     } catch (error) {
       console.error(error);
-      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
   .delete("/:id", async (c) => {
@@ -123,6 +115,6 @@ export const ticketsHandler = new Hono()
         : c.json({ status: "Successfully deleted!" });
     } catch (error) {
       console.error(error);
-      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   });

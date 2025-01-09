@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AcceptTicketBadge } from "./AcceptTicketBadge";
 import { ArrowUp } from "lucide-react";
+import { TicketsRowActions } from "./TicketsRowActions";
 
 type MutatedTickets = {
   id: string;
@@ -91,5 +92,9 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     enableSorting: true,
     enableHiding: false,
     enableColumnFilter: false,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <TicketsRowActions ticketId={row.original.id} />,
   },
 ];
