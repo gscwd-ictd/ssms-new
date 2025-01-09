@@ -15,7 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Popover, PopoverContent, PopoverTrigger } from "@ssms/components/ui/popover";
 import { $categories, $subCategories, $supportTypes, $tickets, $users } from "@ssms/lib/rpcClient";
 import { cn } from "@ssms/lib/shadcn";
-import { AddSupportTicketsFormSchema, TicketsSchema } from "@ssms/server/validations/ticketsSchemas";
+import { AddSupportTicketsFormSchema } from "@ssms/server/validations/ticketsSchemas";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronsUpDown } from "lucide-react";
 import { FunctionComponent, useState } from "react";

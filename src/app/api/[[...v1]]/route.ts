@@ -11,7 +11,7 @@ import { usersHandler } from "@ssms/server/handlers/users";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-export const app = new Hono().basePath("/api/v1");
+const app = new Hono().basePath("/api/v1");
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
