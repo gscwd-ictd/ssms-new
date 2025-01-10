@@ -36,13 +36,7 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     ),
     enableHiding: false,
   },
-  {
-    accessorKey: "details",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Details" />,
-    cell: ({ row }) => <div>{row.getValue("details")}</div>,
-    enableHiding: false,
-    enableColumnFilter: false,
-  },
+
   {
     accessorKey: "assignedTo",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Assigned to" />,
@@ -77,6 +71,15 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     enableHiding: false,
     enableColumnFilter: false,
   },
+
+  {
+    accessorKey: "details",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Details" />,
+    cell: ({ row }) => <div className="truncate">{row.getValue("details")}</div>,
+    enableHiding: false,
+    enableColumnFilter: false,
+  },
+
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,

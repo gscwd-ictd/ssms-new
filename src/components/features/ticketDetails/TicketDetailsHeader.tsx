@@ -134,7 +134,9 @@ export const TicketDetailsHeader: FunctionComponent = () => {
                 {ticket.status}
               </Badge>
 
-              <h1 className="scroll-m-20 text-4xl font-medium tracking-wide mb-2">{ticket.details}</h1>
+              <h1 className="scroll-m-20 text-4xl font-medium tracking-wide mb-2 max-w-[50rem] line-clamp-2">
+                {ticket.details}
+              </h1>
 
               <div className="flex items-center gap-4">
                 <span className="text-muted-foreground flex items-center gap-1">
