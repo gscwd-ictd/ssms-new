@@ -1,7 +1,7 @@
 import { db } from "@ssms/lib/drizzle";
 import { aliasedTable, eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { tickets } from "../db/schemas/tickets";
+import { categories, subCategories, supportTypes, tickets } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { TicketsSchema } from "../validations/ticketsSchemas";
@@ -41,7 +41,39 @@ export const ticketsHandler = new Hono()
   .get("/:id", async (c) => {
     const ticketId = c.req.param("id");
 
-    const stmt = db.select().from(tickets).where(eq(tickets.id, ticketId)).prepare("get_ticket_by_id");
+    const assignee = aliasedTable(user, "asignee");
+    const ca = aliasedTable(categories, "ca");
+    const sc = aliasedTable(subCategories, "sc");
+    const su = aliasedTable(supportTypes, "su");
+
+    const stmt = db
+      .select({
+        id: tickets.id,
+        requestedBy: user.name,
+        requestedByAvatar: user.image,
+        requestedByEmail: user.email,
+        assignedTo: assignee.name,
+        assignedToAvatar: assignee.image,
+        assignedToEmail: assignee.email,
+        details: tickets.details,
+        categoryId: ca.id,
+        categoryName: ca.name,
+        subCategoryId: sc.id,
+        subCategoryName: sc.name,
+        supportTypeId: su.id,
+        supportTypeName: su.name,
+        status: tickets.status,
+        createdAt: tickets.createdAt,
+        updatedAt: tickets.updatedAt,
+      })
+      .from(tickets)
+      .innerJoin(user, eq(user.id, tickets.requestorId))
+      .leftJoin(assignee, eq(assignee.id, tickets.assignedId))
+      .leftJoin(ca, eq(ca.id, tickets.categoryId))
+      .leftJoin(sc, eq(sc.id, tickets.subCategoryId))
+      .leftJoin(su, eq(su.id, tickets.supportTypeId))
+      .where(eq(tickets.id, ticketId))
+      .prepare("get_ticket_by_id");
 
     const res = await stmt.execute().then(takeUniqueOrThrow);
 
@@ -113,6 +145,38 @@ export const ticketsHandler = new Hono()
       return res.rowCount === 0
         ? c.json({ status: "No rows affected!" })
         : c.json({ status: "Successfully deleted!" });
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .get("/user/:id", async (c) => {
+    const userId = c.req.param("id");
+
+    try {
+      const assignee = aliasedTable(user, "asignee");
+
+      const stmt = db
+        .select({
+          id: tickets.id,
+          requestedBy: user.name,
+          requestedByAvatar: user.image,
+          assignedTo: assignee.name,
+          assignedToAvatar: assignee.image,
+          details: tickets.details,
+          status: tickets.status,
+          createdAt: tickets.createdAt,
+          updatedAt: tickets.updatedAt,
+        })
+        .from(tickets)
+        .innerJoin(user, eq(user.id, tickets.requestorId))
+        .leftJoin(assignee, eq(assignee.id, tickets.assignedId))
+        .where(eq(tickets.requestorId, userId))
+        .prepare("get_all_tickets");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
     } catch (error) {
       console.error(error);
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });

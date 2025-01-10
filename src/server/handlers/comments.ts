@@ -1,10 +1,11 @@
 import { Hono } from "hono";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "@ssms/lib/drizzle";
 import { comments } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { CommentsSchema } from "../validations/ticketsSchemas";
+import { user } from "../db/schemas/auth";
 
 export const commentsHandler = new Hono()
   .get("/", async (c) => {
@@ -91,6 +92,33 @@ export const commentsHandler = new Hono()
       return res.rowCount === 0
         ? c.json({ status: "No rows affected!" })
         : c.json({ status: "Successfully deleted!" });
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .get("/tickets/:id", async (c) => {
+    const ticketId = c.req.param("id");
+    try {
+      const stmt = db
+        .select({
+          id: comments.id,
+          userId: comments.userId,
+          name: user.name,
+          image: user.image,
+          details: comments.details,
+          createdAt: comments.createdAt,
+          updatedAt: comments.updatedAt,
+        })
+        .from(comments)
+        .innerJoin(user, eq(user.id, comments.userId))
+        .where(eq(comments.ticketId, ticketId))
+        .orderBy(asc(comments.createdAt))
+        .prepare("get_comments_by_ticket_id");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
     } catch (error) {
       console.error(error);
       throw new HTTPException(401, { message: "Something went wrong!", cause: error });

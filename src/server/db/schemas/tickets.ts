@@ -45,6 +45,8 @@ export const tickets = pgTable("tickets", {
   subCategoryId: text("sub_category_id").references(() => subCategories.id),
   supportTypeId: text("support_type_id").references(() => supportTypes.id),
   details: text("details").notNull(),
+  assessment: text("assessment"),
+  action: text("action"),
   status: statusEnum("status").default("open").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdateFn(() => new Date()),
