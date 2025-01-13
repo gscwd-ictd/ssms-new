@@ -26,16 +26,28 @@ export const TicketsSchema = z.object({
   status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]).optional(),
   assessment: z.string().optional(),
   action: z.string().optional(),
+  cancelledDueTo: z.string().optional(),
+  startedAt: z.date().optional(),
+  resolvedAt: z.date().optional(),
+  cancelledAt: z.date().optional(),
 });
 
-export const UpdateTicketsSchema = z.object({
+export const AcceptTicketSchema = z.object({
+  assignedId: z.string().optional(),
+  startedAt: z.date(),
+  status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]).optional(),
+});
+
+export const ResolveTicketsSchema = z.object({
   assignedId: z.string().optional(),
   categoryId: z.string().optional(),
   subCategoryId: z.string().optional(),
   supportTypeId: z.string().optional(),
   status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]).optional(),
+  details: z.string().optional(),
   assessment: z.string().optional(),
   action: z.string().optional(),
+  resolvedAt: z.string().optional(),
 });
 
 export const AddSupportTicketsFormSchema = z.object({
@@ -44,7 +56,10 @@ export const AddSupportTicketsFormSchema = z.object({
   subCategoryId: z.string().min(28),
   supportTypeId: z.string().min(28),
   details: z.string().min(1, { message: "Please provide some details" }),
-  // status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]),
+});
+
+export const CancelTicketFormSchema = z.object({
+  cancelledDueTo: z.string(),
 });
 
 export const CommentsSchema = z.object({
