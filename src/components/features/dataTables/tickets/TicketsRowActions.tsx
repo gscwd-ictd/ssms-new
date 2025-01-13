@@ -30,7 +30,7 @@ export const TicketsRowActions: FunctionComponent<TicketsRowActionsProps> = ({ t
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem onClick={() => router.push(`/tickets/${ticketId}`)}>View Details</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
+        <DropdownMenuItem>Assign Ticket</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
 

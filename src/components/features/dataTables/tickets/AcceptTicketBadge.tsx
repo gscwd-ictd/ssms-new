@@ -1,6 +1,17 @@
 "use client";
 
 import { useUserSession } from "@ssms/components/stores/useUserSession";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@ssms/components/ui/alert-dialog";
 import { Badge } from "@ssms/components/ui/badge";
 import { $tickets } from "@ssms/lib/rpcClient";
 import { session, user } from "@ssms/server/db/schemas/auth";
@@ -50,17 +61,33 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
   });
 
   return (
-    <Badge
-      role="button"
-      variant="secondary"
-      className="text-xs space-x-1"
-      onClick={() => {
-        const assignedId = userSession?.user.id;
-        mutate({ assignedId, status: "ongoing", startedAt: new Date() });
-      }}
-    >
-      <Check className="h-3 w-3 text-green-500" />
-      <span className="font-bold">Accept</span>
-    </Badge>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Badge role="button" variant="secondary" className="text-xs space-x-1">
+          <Check className="h-3 w-3 text-green-500" />
+          <span className="font-bold">Accept</span>
+        </Badge>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Accepting this ticket serves as an acknowledgment of responsibility and automatically initiates
+            the task&apos;s start time.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              const assignedId = userSession?.user.id;
+              mutate({ assignedId, status: "ongoing" });
+            }}
+          >
+            Continue
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

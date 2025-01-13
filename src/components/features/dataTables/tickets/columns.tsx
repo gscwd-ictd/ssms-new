@@ -1,11 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@ssms/components/ui/avatar";
-import { Badge } from "@ssms/components/ui/badge";
 import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table-column-header";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AcceptTicketBadge } from "./AcceptTicketBadge";
-import { ArrowUp } from "lucide-react";
 import { TicketsRowActions } from "./TicketsRowActions";
+import { AssignTicketBadgeDialog } from "./AssignTicketBadge";
 
 type MutatedTickets = {
   id: string;
@@ -45,15 +44,7 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
         {!row.getValue("assignedTo") ? (
           <div className="space-x-1">
             <AcceptTicketBadge ticketId={row.original.id} />
-            <Badge
-              role="button"
-              variant="outline"
-              className="text-xs space-x-1"
-              onClick={() => alert("assigned to someone else!")}
-            >
-              <ArrowUp className="h-3 w-3" />
-              <span className="font-bold">Assign</span>
-            </Badge>
+            <AssignTicketBadgeDialog ticketId={row.original.id} />
           </div>
         ) : (
           <div className="flex items-center gap-3">

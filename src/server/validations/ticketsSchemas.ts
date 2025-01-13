@@ -34,8 +34,11 @@ export const TicketsSchema = z.object({
 
 export const AcceptTicketSchema = z.object({
   assignedId: z.string().optional(),
-  startedAt: z.date(),
   status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]).optional(),
+});
+
+export const AssignTicketSchema = z.object({
+  assignedId: z.string().optional(),
 });
 
 export const ResolveTicketsSchema = z.object({
