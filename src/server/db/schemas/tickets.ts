@@ -47,7 +47,11 @@ export const tickets = pgTable("tickets", {
   details: text("details").notNull(),
   assessment: text("assessment"),
   action: text("action"),
+  cancelledDueTo: text("cancelled_due_to"),
   status: statusEnum("status").default("open").notNull(),
+  startedAt: timestamp("started_at", { mode: "date" }),
+  resolvedAt: timestamp("resolved_at", { mode: "date" }),
+  cancelledAt: timestamp("cancelled_at", { mode: "date" }),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdateFn(() => new Date()),
 });
