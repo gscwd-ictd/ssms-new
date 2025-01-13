@@ -13,7 +13,6 @@ import {
 } from "../validations/ticketsSchemas";
 import { user } from "../db/schemas/auth";
 import { takeUniqueOrThrow } from "../utils/takeUniqueOrThrow";
-import { format } from "date-fns";
 
 export const ticketsHandler = new Hono()
   .get("/", async (c) => {

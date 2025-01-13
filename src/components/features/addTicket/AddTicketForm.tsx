@@ -129,7 +129,7 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
       return newTicket;
     },
 
-    onSuccess: (data) => {
+    onSuccess: () => {
       // queryClient.invalidateQueries({ queryKey: ["get-all-tickets"] });
       // toast.success("Successfully added a new ticket!");
       setDialogOpen(false);

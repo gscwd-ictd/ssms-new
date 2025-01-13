@@ -58,7 +58,11 @@ export const TicketsDataTable: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    sessionLoading || ticketsLoading ? setLoading(true) : setLoading(false);
+    if (sessionLoading || ticketsLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
   }, [sessionLoading, ticketsLoading]);
 
   if (loading) {

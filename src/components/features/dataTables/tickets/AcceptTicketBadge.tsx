@@ -96,7 +96,11 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
             onClick={() => {
               const assignedId = userSession?.user.id;
               mutate({ assignedId, status: "ongoing" });
-              mode === "badge" ? router.push(`/tickets/${ticketId}`) : location.reload();
+              if (mode === "badge") {
+                router.push(`/tickets/${ticketId}`);
+              } else {
+                location.reload();
+              }
             }}
           >
             Continue
