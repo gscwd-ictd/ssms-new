@@ -8,8 +8,7 @@ import { $comments, $tickets } from "@ssms/lib/rpcClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Clock, MessagesSquare } from "lucide-react";
 import { useParams } from "next/navigation";
-import { FunctionComponent } from "react";
-import { UserInSession } from "../dataTables/tickets/AcceptTicketBadge";
+import { FunctionComponent, useEffect } from "react";
 import { Separator } from "@ssms/components/ui/separator";
 import { Button } from "@ssms/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -19,8 +18,9 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@ssms/compo
 import { Textarea } from "@ssms/components/ui/textarea";
 import { z } from "zod";
 import { format } from "date-fns";
-import { authClient } from "@ssms/lib/authCient";
+import { useUserSession } from "@ssms/components/stores/useUserSession";
 import { ResolveTicketDialog } from "../resolveTicket/ResolveTicketDialog";
+import { CancelTicketFormDialog } from "../cancelTicket/CancelTicketFormDialog";
 
 export type TicketDetails = {
   id: string;
@@ -45,16 +45,22 @@ export type TicketDetails = {
 export const TicketDetailsHeader: FunctionComponent = () => {
   const param = useParams<{ id: string }>();
 
+  const userSession = useUserSession((state) => state.userSession);
+
   const queryClient = useQueryClient();
 
-  const { data: session } = useQuery({
-    queryKey: ["get-session-details", param.id],
-    queryFn: async () => {
-      const res = (await authClient.getSession()).data;
-
-      return res;
+  const commentForm = useForm({
+    resolver: zodResolver(CommentsSchema),
+    defaultValues: {
+      userId: userSession?.user.id,
+      ticketId: param.id,
+      details: "",
     },
   });
+
+  useEffect(() => {
+    commentForm.setValue("userId", userSession?.user.id);
+  }, [commentForm, userSession]);
 
   const { data: ticket } = useQuery<TicketDetails>({
     queryKey: ["get-ticket-details"],
@@ -90,15 +96,6 @@ export const TicketDetailsHeader: FunctionComponent = () => {
     },
   });
 
-  const commentForm = useForm({
-    resolver: zodResolver(CommentsSchema),
-    defaultValues: {
-      userId: session?.user.id,
-      ticketId: param.id,
-      details: "",
-    },
-  });
-
   const { mutate } = useMutation({
     mutationKey: ["add-comment"],
     mutationFn: async (data: z.infer<typeof CommentsSchema>) => {
@@ -130,7 +127,18 @@ export const TicketDetailsHeader: FunctionComponent = () => {
         <CardHeader className="space-y-7">
           <div className="flex items-center justify-between mr-20">
             <div className="space-y-2">
-              <Badge variant="secondary" className="capitalize">
+              <Badge
+                variant="secondary"
+                className={`${
+                  ticket.status === "resolved"
+                    ? "bg-green-700"
+                    : ticket.status === "ongoing"
+                    ? "bg-amber-700"
+                    : ticket.status === "open"
+                    ? "bg-blue-700"
+                    : "bg-rose-700"
+                } uppercase tracking-wider`}
+              >
                 {ticket.status}
               </Badge>
 
@@ -143,7 +151,11 @@ export const TicketDetailsHeader: FunctionComponent = () => {
                   <Clock className="h-4 w-4" />
                   Created {format(ticket.createdAt, "MMMM d, yyyy, hh:mm:ss a")}
                 </span>
-                <span className="text-muted-foreground flex items-center gap-1">
+                <span
+                  role="button"
+                  onClick={() => commentForm.setFocus("details")}
+                  className="text-muted-foreground flex items-center gap-1 cursor-pointer hover:underline"
+                >
                   <MessagesSquare className="h-4 w-4" />
                   {comments?.length === 0 ? "No" : comments?.length} comments
                 </span>
@@ -198,12 +210,14 @@ export const TicketDetailsHeader: FunctionComponent = () => {
             </div>
           </div>
 
-          {queryClient.getQueryData<UserInSession>(["get-session-details"])?.user.role === "support" && (
-            <div className="space-x-2">
-              <Button variant="outline">Update</Button>
-              <ResolveTicketDialog ticketDetails={ticket} />
-            </div>
-          )}
+          <div className="space-x-2">
+            {/* <Button variant="outline" disabled={ticket.status !== "open"}>
+              Cancel
+            </Button> */}
+            <CancelTicketFormDialog status={ticket.status} />
+
+            {userSession?.user.role === "support" && <ResolveTicketDialog ticketDetails={ticket} />}
+          </div>
         </CardHeader>
 
         <Separator />
@@ -241,16 +255,9 @@ export const TicketDetailsHeader: FunctionComponent = () => {
 
           <div className="mt-7 flex items-start gap-4">
             <Avatar>
-              <AvatarImage
-                src={
-                  queryClient.getQueryData<UserInSession>(["get-session-details"])?.user.image as
-                    | string
-                    | undefined
-                }
-                className="object-cover"
-              />
+              <AvatarImage src={userSession?.user.image as string} className="object-cover" />
               <AvatarFallback className="font-semibold text-lg">
-                {queryClient.getQueryData<UserInSession>(["get-session-details"])?.user.name.charAt(0)}
+                {userSession?.user.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
 

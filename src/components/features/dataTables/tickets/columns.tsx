@@ -76,7 +76,7 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     accessorKey: "details",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Details" />,
     cell: ({ row }) => <div className="truncate">{row.getValue("details")}</div>,
-    enableHiding: false,
+    enableHiding: true,
     enableColumnFilter: false,
   },
 
@@ -91,8 +91,7 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     accessorFn: (row) => <>{row.createdAt ? formatDistanceToNow(row.createdAt, { addSuffix: true }) : ""}</>,
     header: ({ column }) => <DataTableColumnHeader column={column} title="Requested at" />,
     cell: ({ row }) => <div className="text-muted-foreground">{row.getValue("createdAt")}</div>,
-    sortingFn: "datetime",
-    enableSorting: true,
+    enableSorting: false,
     enableHiding: false,
     enableColumnFilter: false,
   },

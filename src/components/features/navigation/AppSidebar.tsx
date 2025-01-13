@@ -19,6 +19,8 @@ import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useUserSession } from "@ssms/components/stores/useUserSession";
+import { UserInSession } from "../dataTables/tickets/AcceptTicketBadge";
 
 const mainItems = [
   {
@@ -57,12 +59,18 @@ const configItems = [
 ];
 
 export const AppSidebar: FunctionComponent = () => {
+  const setUserSession = useUserSession((state) => state.setUserSession);
+
   const pathname = usePathname();
 
   const { data: session } = useQuery({
     queryKey: ["get-session-details"],
     queryFn: async () => {
-      return (await authClient.getSession()).data;
+      const userSession = (await authClient.getSession()).data as UserInSession;
+
+      setUserSession(userSession);
+
+      return userSession;
     },
   });
 

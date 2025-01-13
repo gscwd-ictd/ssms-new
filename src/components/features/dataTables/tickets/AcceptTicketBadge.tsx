@@ -1,9 +1,10 @@
 "use client";
 
+import { useUserSession } from "@ssms/components/stores/useUserSession";
 import { Badge } from "@ssms/components/ui/badge";
 import { $tickets } from "@ssms/lib/rpcClient";
 import { session, user } from "@ssms/server/db/schemas/auth";
-import { TicketsSchema } from "@ssms/server/validations/ticketsSchemas";
+import { AcceptTicketSchema } from "@ssms/server/validations/ticketsSchemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check } from "lucide-react";
 import { FunctionComponent } from "react";
@@ -14,8 +15,6 @@ type AcceptTicketBadgeProps = {
   ticketId: string;
 };
 
-type UpdateTicket = Partial<z.infer<typeof TicketsSchema>>;
-
 export type UserInSession = {
   session: typeof session.$inferInsert;
   user: typeof user.$inferSelect;
@@ -24,10 +23,12 @@ export type UserInSession = {
 export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ ticketId }) => {
   const queryClient = useQueryClient();
 
+  const userSession = useUserSession((state) => state.userSession);
+
   const { mutate } = useMutation({
     mutationKey: ["accept-ticket"],
-    mutationFn: async (data: UpdateTicket) => {
-      const res = await $tickets[":id"].$patch({
+    mutationFn: async (data: z.infer<typeof AcceptTicketSchema>) => {
+      const res = await $tickets[":id"].accept.$patch({
         json: data,
         param: {
           id: ticketId,
@@ -54,8 +55,8 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
       variant="secondary"
       className="text-xs space-x-1"
       onClick={() => {
-        const assignedId = queryClient.getQueryData<UserInSession>(["get-session-details"])?.user.id;
-        mutate({ assignedId, status: "ongoing" });
+        const assignedId = userSession?.user.id;
+        mutate({ assignedId, status: "ongoing", startedAt: new Date() });
       }}
     >
       <Check className="h-3 w-3 text-green-500" />
