@@ -4,7 +4,12 @@ import { Hono } from "hono";
 import { categories, subCategories, supportTypes, tickets } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
-import { TicketsSchema } from "../validations/ticketsSchemas";
+import {
+  AcceptTicketSchema,
+  CancelTicketFormSchema,
+  ResolveTicketsSchema,
+  TicketsSchema,
+} from "../validations/ticketsSchemas";
 import { user } from "../db/schemas/auth";
 import { takeUniqueOrThrow } from "../utils/takeUniqueOrThrow";
 
@@ -106,7 +111,36 @@ export const ticketsHandler = new Hono()
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
-  .patch("/:id", zValidator("json", TicketsSchema.partial()), async (c) => {
+  .patch("/:id", zValidator("form", TicketsSchema.partial()), async (c) => {
+    try {
+      const ticketId = c.req.param("id");
+      const body = c.req.valid("form");
+
+      const stmt = db
+        .update(tickets)
+        .set(body)
+        .where(eq(tickets.id, ticketId))
+        .returning({
+          requestorId: tickets.requestorId,
+          categoryId: tickets.categoryId,
+          subCategoryId: tickets.subCategoryId,
+          supportTypeId: tickets.supportTypeId,
+          details: tickets.details,
+          status: tickets.status,
+          createdAt: tickets.createdAt,
+          updatedAt: tickets.updatedAt,
+        })
+        .prepare("update_ticket");
+
+      const res = await stmt.execute();
+
+      return c.json(res[0]);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .patch("/:id/accept", zValidator("json", AcceptTicketSchema), async (c) => {
     try {
       const ticketId = c.req.param("id");
       const body = c.req.valid("json");
@@ -114,6 +148,64 @@ export const ticketsHandler = new Hono()
       const stmt = db
         .update(tickets)
         .set(body)
+        .where(eq(tickets.id, ticketId))
+        .returning({
+          requestorId: tickets.requestorId,
+          categoryId: tickets.categoryId,
+          subCategoryId: tickets.subCategoryId,
+          supportTypeId: tickets.supportTypeId,
+          details: tickets.details,
+          status: tickets.status,
+          createdAt: tickets.createdAt,
+          updatedAt: tickets.updatedAt,
+        })
+        .prepare("update_ticket");
+
+      const res = await stmt.execute();
+
+      return c.json(res[0]);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .patch("/:id/resolve", zValidator("form", ResolveTicketsSchema), async (c) => {
+    const ticketId = c.req.param("id");
+    const body = c.req.valid("form");
+
+    try {
+      const stmt = db
+        .update(tickets)
+        .set({ ...body, resolvedAt: new Date() })
+        .where(eq(tickets.id, ticketId))
+        .returning({
+          requestorId: tickets.requestorId,
+          categoryId: tickets.categoryId,
+          subCategoryId: tickets.subCategoryId,
+          supportTypeId: tickets.supportTypeId,
+          details: tickets.details,
+          status: tickets.status,
+          createdAt: tickets.createdAt,
+          updatedAt: tickets.updatedAt,
+        })
+        .prepare("update_ticket");
+
+      const res = await stmt.execute();
+
+      return c.json(res[0]);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .patch("/:id/cancel", zValidator("form", CancelTicketFormSchema), async (c) => {
+    const ticketId = c.req.param("id");
+    const body = c.req.valid("form");
+
+    try {
+      const stmt = db
+        .update(tickets)
+        .set({ ...body, status: "cancelled", cancelledAt: new Date() })
         .where(eq(tickets.id, ticketId))
         .returning({
           requestorId: tickets.requestorId,
