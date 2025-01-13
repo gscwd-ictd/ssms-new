@@ -20,6 +20,7 @@ import { Input } from "@ssms/components/ui/input";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { createContext, useState } from "react";
 import { LoadingSpinner } from "@ssms/components/ui/loading-spinner";
+import { FileX2 } from "lucide-react";
 
 type DataTableProps<T> = {
   columns: Array<ColumnDef<T, unknown>>;
@@ -130,17 +131,19 @@ export function DataTable<T>({
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No results.
+                      <div className="flex items-center w-full justify-center gap-2">
+                        <FileX2 className="text-muted h-7 w-7" />
+                        <span className="text-2xl font-extrabold text-muted tracking-wide">No Results</span>
+                      </div>
                     </TableCell>
                   </TableRow>
                 )
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="flex h-24 w-full items-center justify-center gap-2"
-                  >
-                    <LoadingSpinner /> <span>Loading data...</span>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    <div className="flex w-full items-center justify-center gap-2">
+                      <LoadingSpinner /> <span className="text-lg">Loading data...</span>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}

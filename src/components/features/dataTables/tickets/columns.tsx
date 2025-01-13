@@ -62,7 +62,7 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
         {row.original.status === "open" && <Circle className="w-4 h-4 text-blue-500" />}
         {row.original.status === "cancelled" && <CircleOff className="w-4 h-4 text-rose-500" />}
         {row.original.status === "resolved" && <CircleCheckBig className="w-4 h-4 text-green-500" />}

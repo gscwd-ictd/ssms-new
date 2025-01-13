@@ -32,6 +32,7 @@ import { z } from "zod";
 import Image from "next/image";
 import { cn } from "@ssms/lib/shadcn";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type UserList = {
   id: string;
@@ -47,6 +48,8 @@ export const AssignTicketBadgeDialog: FunctionComponent<AssignTicketBadgeDialogP
   const [open, setOpen] = useState(false);
   const [userListOpen, setUserListOpen] = useState(false);
   const [selectedUserAvatar, setSelectedUserAvatar] = useState<string | null>(null);
+
+  const router = useRouter();
 
   const queryClient = useQueryClient();
 

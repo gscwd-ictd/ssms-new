@@ -28,7 +28,8 @@ export type TicketDetails = {
   requestedBy: string;
   requestedByAvatar: string | null;
   requestedByEmail: string;
-  assignedTo: string | null;
+  assignedToId: string | null;
+  assignedToName: string | null;
   assignedToAvatar: string | null;
   assignedToEmail: string | null;
   details: string;
@@ -182,7 +183,7 @@ export const TicketDetailsHeader: FunctionComponent = () => {
                 </div>
               </div>
 
-              {ticket.assignedTo && (
+              {ticket.assignedToName && (
                 <>
                   <div className="h-10">
                     <Separator orientation="vertical" />
@@ -190,18 +191,18 @@ export const TicketDetailsHeader: FunctionComponent = () => {
 
                   <div className="space-y-2">
                     <Label className="text-muted-foreground">Assgned to:</Label>
-                    {ticket.assignedTo ? (
+                    {ticket.assignedToName ? (
                       <>
                         <div className="flex items-center gap-2">
                           <Avatar className="h-8 w-8">
                             <AvatarImage src={ticket.assignedToAvatar!} className="object-cover" />
                             <AvatarFallback className="font-semibold text-lg">
-                              {ticket.assignedTo?.charAt(0)}
+                              {ticket.assignedToName?.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
 
                           <div>
-                            <p className="font-bold">{ticket.assignedTo}</p>
+                            <p className="font-bold">{ticket.assignedToName}</p>
                             <p className="text-sm text-muted-foreground">{ticket.assignedToEmail}</p>
                           </div>
                         </div>

@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@ssms/components/ui/pop
 import { $categories, $subCategories, $supportTypes, $tickets, $users } from "@ssms/lib/rpcClient";
 import { cn } from "@ssms/lib/shadcn";
 import { AddSupportTicketsFormSchema } from "@ssms/server/validations/ticketsSchemas";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronsUpDown } from "lucide-react";
 import { FunctionComponent, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,7 +24,6 @@ import Image from "next/image";
 import { z } from "zod";
 import { Textarea } from "@ssms/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ssms/components/ui/select";
-import { toast } from "sonner";
 
 type AddTicketFormProps = {
   setDialogOpen: (open: boolean) => void;
@@ -35,7 +34,9 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
   const [userListOpen, setUserListOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  const queryClient = useQueryClient();
+  // const router = useRouter();
+
+  // const queryClient = useQueryClient();
 
   const form = useForm({
     resolver: zodResolver(AddSupportTicketsFormSchema),
@@ -127,10 +128,13 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
 
       return newTicket;
     },
-    onSuccess: () => {
+
+    onSuccess: (data) => {
+      // queryClient.invalidateQueries({ queryKey: ["get-all-tickets"] });
+      // toast.success("Successfully added a new ticket!");
       setDialogOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["get-all-tickets"] });
-      toast.success("Successfully added a new ticket!");
+      form.reset();
+      location.reload();
     },
     onError: (err) => alert(err.message),
   });

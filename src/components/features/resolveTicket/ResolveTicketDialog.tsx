@@ -22,6 +22,7 @@ import { Textarea } from "@ssms/components/ui/textarea";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { useUserSession } from "@ssms/components/stores/useUserSession";
 
 type ResolveTicketDialogProps = {
   ticketDetails: TicketDetails;
@@ -30,6 +31,8 @@ type ResolveTicketDialogProps = {
 export const ResolveTicketDialog: FunctionComponent<ResolveTicketDialogProps> = ({ ticketDetails }) => {
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const userSession = useUserSession((state) => state.userSession);
 
   const param = useParams<{ id: string }>();
 
@@ -139,7 +142,11 @@ export const ResolveTicketDialog: FunctionComponent<ResolveTicketDialogProps> = 
         <Button
           variant="secondary"
           onClick={() => setOpen(true)}
-          disabled={ticketDetails.status === "resolved" || ticketDetails.status === "cancelled"}
+          disabled={
+            ticketDetails.status === "resolved" ||
+            ticketDetails.status === "cancelled" ||
+            ticketDetails.assignedToId !== userSession?.user.id
+          }
         >
           Resolve
         </Button>

@@ -6,12 +6,15 @@ import { FunctionComponent, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { Calendar } from "@ssms/components/ui/calendar";
+import { useDateFilter } from "@ssms/components/stores/useDateFilter";
 
 export const DateRangeFilter: FunctionComponent = () => {
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), -30),
+    from: addDays(new Date(), -30),
+    to: addDays(new Date(), +1),
   });
+
+  const setDateFilter = useDateFilter((state) => state.setDateFilter);
 
   return (
     <div className={cn("grid gap-2")}>
@@ -47,15 +50,7 @@ export const DateRangeFilter: FunctionComponent = () => {
           />
 
           <div className="p-5">
-            <Button
-              variant="secondary"
-              onClick={() =>
-                console.log({
-                  from: format(date?.from as Date, "yyyy-MM-dd HH:mm:ss.SSSSSS"),
-                  to: format(date?.to as Date, "yyyy-MM-dd HH:mm:ss.SSSSSS"),
-                })
-              }
-            >
+            <Button variant="secondary" onClick={() => setDateFilter(date)}>
               Filter
             </Button>
           </div>
