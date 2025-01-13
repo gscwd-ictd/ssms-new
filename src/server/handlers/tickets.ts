@@ -44,6 +44,17 @@ export const ticketsHandler = new Hono()
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
+  // .get("/range", async (c) => {
+  //   const from = c.req.query("from");
+  //   const to = c.req.query("to");
+
+  //   try {
+  //     const stmt = db.select().from(tickets).where(between(tickets.createdAt, from, to));
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+  //   }
+  // })
   .get("/:id", async (c) => {
     const ticketId = c.req.param("id");
 
