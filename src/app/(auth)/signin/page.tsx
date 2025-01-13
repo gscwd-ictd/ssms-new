@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@ssms/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { authClient } from "@ssms/lib/auth-client";
+import { authClient } from "@ssms/lib/authCient";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "@ssms/components/ui/loading-spinner";

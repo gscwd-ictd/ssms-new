@@ -29,6 +29,41 @@
       "when": 1735839724946,
       "tag": "0003_huge_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1736144208098,
+      "tag": "0004_powerful_lorna_dane",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1736149733968,
+      "tag": "0005_secret_fenris",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1736175899993,
+      "tag": "0006_fat_franklin_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1736493743746,
+      "tag": "0007_organic_fixer",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1736741646362,
+      "tag": "0008_curious_frightful_four",
+      "breakpoints": true
     }
   ]
 }
