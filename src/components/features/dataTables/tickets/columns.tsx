@@ -1,12 +1,14 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@ssms/components/ui/avatar";
 import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table-column-header";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
-import { AcceptTicketBadge } from "./AcceptTicketBadge";
 import { TicketsRowActions } from "./TicketsRowActions";
-import { AssignTicketBadgeDialog } from "./AssignTicketBadge";
+import { AssignedToColumn } from "./AssignedToColumn";
+import { Circle, CircleCheckBig, CircleOff, Clock4 } from "lucide-react";
 
-type MutatedTickets = {
+export type MutatedTickets = {
   id: string;
   requestedBy: string;
   requestedByAvatar: string | null;
@@ -41,22 +43,7 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Assigned to" />,
     cell: ({ row }) => (
       <div>
-        {!row.getValue("assignedTo") ? (
-          <div className="space-x-1">
-            <AcceptTicketBadge ticketId={row.original.id} />
-            <AssignTicketBadgeDialog ticketId={row.original.id} />
-          </div>
-        ) : (
-          <div className="flex items-center gap-3">
-            <Avatar className="h-7 w-7">
-              <AvatarImage src={row.original.assignedToAvatar!} className="object-cover" />
-              <AvatarFallback className="font-semibold text-lg">
-                {row.original.assignedTo?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="font-semibold">{row.original.assignedTo}</span>
-          </div>
-        )}
+        <AssignedToColumn row={row} />
       </div>
     ),
     enableHiding: false,
@@ -74,7 +61,15 @@ export const ticketsColumns: ColumnDef<MutatedTickets>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-    cell: ({ row }) => <span className="capitalize">{row.getValue("status")}</span>,
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        {row.original.status === "open" && <Circle className="w-4 h-4 text-blue-500" />}
+        {row.original.status === "cancelled" && <CircleOff className="w-4 h-4 text-rose-500" />}
+        {row.original.status === "resolved" && <CircleCheckBig className="w-4 h-4 text-green-500" />}
+        {row.original.status === "ongoing" && <Clock4 className="w-4 h-4 text-amber-500" />}
+        <span className="capitalize">{row.getValue("status")}</span>
+      </div>
+    ),
     enableHiding: false,
   },
   {

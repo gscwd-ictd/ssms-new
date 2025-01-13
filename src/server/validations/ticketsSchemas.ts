@@ -61,6 +61,11 @@ export const AddSupportTicketsFormSchema = z.object({
   details: z.string().min(1, { message: "Please provide some details" }),
 });
 
+export const AddUserTicketsFormSchema = z.object({
+  requestorId: z.string().min(28),
+  details: z.string().min(1, { message: "Please provide some details" }),
+});
+
 export const CancelTicketFormSchema = z.object({
   cancelledDueTo: z.string(),
 });

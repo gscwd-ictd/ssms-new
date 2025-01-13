@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@ssms/components/ui/alert-dialog";
 import { Badge } from "@ssms/components/ui/badge";
+import { Button } from "@ssms/components/ui/button";
 import { $tickets } from "@ssms/lib/rpcClient";
 import { session, user } from "@ssms/server/db/schemas/auth";
 import { AcceptTicketSchema } from "@ssms/server/validations/ticketsSchemas";
@@ -24,6 +25,7 @@ import { z } from "zod";
 
 type AcceptTicketBadgeProps = {
   ticketId: string;
+  mode: "badge" | "button";
 };
 
 export type UserInSession = {
@@ -31,7 +33,7 @@ export type UserInSession = {
   user: typeof user.$inferSelect;
 };
 
-export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ ticketId }) => {
+export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ ticketId, mode }) => {
   const queryClient = useQueryClient();
 
   const userSession = useUserSession((state) => state.userSession);
@@ -56,17 +58,24 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
     },
     onSuccess: () => {
       toast.success("Successfully accepted the ticket!");
-      queryClient.invalidateQueries({ queryKey: ["get-all-tickets"] });
+      queryClient.invalidateQueries({ queryKey: ["get-all-tickets", "get-ticket-details"] });
     },
   });
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Badge role="button" variant="secondary" className="text-xs space-x-1">
-          <Check className="h-3 w-3 text-green-500" />
-          <span className="font-bold">Accept</span>
-        </Badge>
+        {mode === "badge" ? (
+          <Badge role="button" variant="secondary" className="text-xs space-x-1">
+            <Check className="h-3 w-3 text-green-500" />
+            <span className="font-bold">Accept</span>
+          </Badge>
+        ) : (
+          <Button variant="secondary">
+            <Check className="h-3 w-3 text-green-500" />
+            <span className="font-bold">Accept</span>
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

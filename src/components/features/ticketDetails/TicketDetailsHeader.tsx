@@ -21,6 +21,7 @@ import { format } from "date-fns";
 import { useUserSession } from "@ssms/components/stores/useUserSession";
 import { ResolveTicketDialog } from "../resolveTicket/ResolveTicketDialog";
 import { CancelTicketFormDialog } from "../cancelTicket/CancelTicketFormDialog";
+import { AcceptTicketBadge } from "../dataTables/tickets/AcceptTicketBadge";
 
 export type TicketDetails = {
   id: string;
@@ -137,7 +138,7 @@ export const TicketDetailsHeader: FunctionComponent = () => {
                     : ticket.status === "open"
                     ? "bg-blue-700"
                     : "bg-rose-700"
-                } uppercase tracking-wider`}
+                } uppercase tracking-wider text-white`}
               >
                 {ticket.status}
               </Badge>
@@ -181,42 +182,51 @@ export const TicketDetailsHeader: FunctionComponent = () => {
                 </div>
               </div>
 
-              <div className="h-10">
-                <Separator orientation="vertical" />
-              </div>
+              {ticket.assignedTo && (
+                <>
+                  <div className="h-10">
+                    <Separator orientation="vertical" />
+                  </div>
 
-              <div className="space-y-2">
-                <Label className="text-muted-foreground">Assgned to:</Label>
-                {ticket.assignedTo ? (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={ticket.assignedToAvatar!} className="object-cover" />
-                        <AvatarFallback className="font-semibold text-lg">
-                          {ticket.assignedTo?.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground">Assgned to:</Label>
+                    {ticket.assignedTo ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={ticket.assignedToAvatar!} className="object-cover" />
+                            <AvatarFallback className="font-semibold text-lg">
+                              {ticket.assignedTo?.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
 
-                      <div>
-                        <p className="font-bold">{ticket.assignedTo}</p>
-                        <p className="text-sm text-muted-foreground">{ticket.assignedToEmail}</p>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-              </div>
+                          <div>
+                            <p className="font-bold">{ticket.assignedTo}</p>
+                            <p className="text-sm text-muted-foreground">{ticket.assignedToEmail}</p>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
-          <div className="space-x-2">
+          <div className="flex items-center gap-2">
             {/* <Button variant="outline" disabled={ticket.status !== "open"}>
               Cancel
             </Button> */}
             <CancelTicketFormDialog status={ticket.status} />
 
-            {userSession?.user.role === "support" && <ResolveTicketDialog ticketDetails={ticket} />}
+            {userSession?.user.role === "support" && ticket.status === "ongoing" ? (
+              <ResolveTicketDialog ticketDetails={ticket} />
+            ) : (
+              userSession?.user.role === "support" &&
+              ticket.status === "open" && <AcceptTicketBadge ticketId={ticket.id} mode="button" />
+            )}
           </div>
         </CardHeader>
 

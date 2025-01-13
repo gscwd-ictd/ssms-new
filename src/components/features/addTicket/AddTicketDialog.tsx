@@ -11,8 +11,13 @@ import {
 } from "@ssms/components/ui/dialog";
 import { Button } from "../../ui/button";
 import { AddTicketForm } from "./AddTicketForm";
+import { AddTicketFormUser } from "./AddTicketFormUser";
 
-export const AddTicketDialog: FunctionComponent = () => {
+type AddTicketDialogProps = {
+  role: "user" | "support" | null | undefined;
+};
+
+export const AddTicketDialog: FunctionComponent<AddTicketDialogProps> = ({ role }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,9 +32,8 @@ export const AddTicketDialog: FunctionComponent = () => {
           <DialogTitle>Add ticket</DialogTitle>
           <DialogDescription>Create a ticket for any IT related issues</DialogDescription>
         </DialogHeader>
-        <div>
-          <AddTicketForm setDialogOpen={setOpen} />
-        </div>
+        {role === "support" && <AddTicketForm setDialogOpen={setOpen} />}
+        {role === "user" && <AddTicketFormUser setDialogOpen={setOpen} />}
       </DialogContent>
     </Dialog>
   );
