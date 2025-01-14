@@ -3,7 +3,7 @@ import { department, division, office } from "./org";
 
 export const roleEnum = pgEnum("roles", ["support", "user"]);
 
-export const user = pgTable("user", {
+export const user = pgTable("users", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   role: roleEnum("role").default("user"),

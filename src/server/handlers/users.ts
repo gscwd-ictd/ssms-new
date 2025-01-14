@@ -2,9 +2,42 @@ import { db } from "@ssms/lib/drizzle";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { user } from "../db/schemas/auth";
-import { eq } from "drizzle-orm";
+import { aliasedTable, eq } from "drizzle-orm";
+import { department, division, office } from "../db/schemas/org";
 
 export const usersHandler = new Hono()
+  .get("/", async (c) => {
+    const dept = aliasedTable(department, "dept");
+    const div = aliasedTable(division, "div");
+
+    try {
+      const stmt = db
+        .select({
+          id: user.id,
+          name: user.name,
+          image: user.image,
+          role: user.role,
+          officeId: office.id,
+          office: office.name,
+          departmentId: dept.id,
+          department: dept.name,
+          divisionId: div.id,
+          division: div.name,
+        })
+        .from(user)
+        .innerJoin(office, eq(office.id, user.office))
+        .leftJoin(dept, eq(dept.id, user.department))
+        .leftJoin(div, eq(div.id, user.division))
+        .prepare("get_all_users");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
   .get("list-summary", async (c) => {
     try {
       const stmt = db

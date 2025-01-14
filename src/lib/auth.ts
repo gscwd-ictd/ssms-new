@@ -29,12 +29,12 @@ export const auth = betterAuth({
         fieldName: "office",
       },
       department: {
-        required: true,
+        required: false,
         type: "string",
         fieldName: "department",
       },
       division: {
-        required: true,
+        required: false,
         type: "string",
         fieldName: "division",
       },
