@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ResolveTicketsSchema } from "@ssms/server/validations/ticketsSchemas";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ssms/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ssms/components/ui/select";
-import { TicketDetails } from "../ticketDetails/TicketDetailsHeader";
+import { TicketDetails } from "../ticketDetails/TicketSummary";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { $categories, $subCategories, $supportTypes, $tickets } from "@ssms/lib/rpcClient";
 import { Textarea } from "@ssms/components/ui/textarea";
@@ -133,7 +133,7 @@ export const ResolveTicketDialog: FunctionComponent<ResolveTicketDialogProps> = 
 
   const onSubmit = (data: z.infer<typeof ResolveTicketsSchema>) => {
     mutate({ ...data, status: "resolved" });
-    console.log({ ...data, resolvedAt: new Date(), status: "resolved" });
+    // console.log({ ...data, resolvedAt: new Date(), status: "resolved" });
   };
 
   return (
