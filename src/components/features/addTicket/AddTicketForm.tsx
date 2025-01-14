@@ -24,7 +24,11 @@ import Image from "next/image";
 import { z } from "zod";
 import { Textarea } from "@ssms/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ssms/components/ui/select";
+// import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { LoadingSpinner } from "@ssms/components/ui/loading-spinner";
+import { useDateFilter } from "@ssms/components/stores/useDateFilter";
+import { addDays, startOfMonth } from "date-fns";
 
 type AddTicketFormProps = {
   setDialogOpen: (open: boolean) => void;
@@ -34,6 +38,10 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
   const [selectedUserAvatar, setSelectedUserAvatar] = useState<string | null>(null);
   const [userListOpen, setUserListOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const setDateFiler = useDateFilter((state) => state.setDateFilter);
+
+  // const router = useRouter();
 
   const queryClient = useQueryClient();
 
@@ -64,7 +72,7 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
     },
   });
 
-  const { data: userList } = useQuery({
+  const { data: userList, isPending: userListLoading } = useQuery({
     queryKey: ["get-user-list-summary"],
     queryFn: async () => {
       const res = await $users["list-summary"].$get();
@@ -127,10 +135,22 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
 
       return newTicket;
     },
+
     onSuccess: () => {
-      setDialogOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["get-all-tickets"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-tickets"],
+      });
+
       toast.success("Successfully added a new ticket!");
+      setDialogOpen(false);
+      form.reset();
+
+      setDateFiler({
+        from: startOfMonth(new Date()),
+        to: addDays(new Date(), +1),
+      });
+
+      //router.push(`/tickets/${data.id}`);
     },
     onError: (err) => alert(err.message),
   });
@@ -176,40 +196,47 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
                   <PopoverContent className="w-full p-0" align="start">
                     <Command>
                       <CommandInput placeholder="Search user..." />
-                      <CommandList>
-                        <CommandEmpty>No user found.</CommandEmpty>
-                        <CommandGroup>
-                          {userList?.map((user) => (
-                            <CommandItem
-                              value={user.name}
-                              key={user.id}
-                              onSelect={() => {
-                                form.setValue("requestorId", user.id);
-                                setSelectedUserAvatar(user.image);
-                                setUserListOpen(false);
-                              }}
-                            >
-                              <div className="flex items-center gap-3">
-                                <Avatar className="h-5 w-5">
-                                  <AvatarImage src={user.image!} alt="profile" className="object-cover" />
-                                  <AvatarFallback>
-                                    <Image
-                                      className="dark:invert object-cover"
-                                      src="/default.svg"
-                                      alt="default logo"
-                                      width={0}
-                                      height={0}
-                                      style={{ width: "auto", height: "auto" }}
-                                      priority
-                                    />
-                                  </AvatarFallback>
-                                </Avatar>
-                                <span className="font-medium">{user.name}</span>
-                              </div>
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
+                      {userListLoading ? (
+                        <div className="flex items-center justify-center p-5 gap-1">
+                          <LoadingSpinner className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-muted-foreground font-medium">Loading user...</span>
+                        </div>
+                      ) : (
+                        <CommandList>
+                          <CommandEmpty>No user found.</CommandEmpty>
+                          <CommandGroup>
+                            {userList?.map((user) => (
+                              <CommandItem
+                                value={user.name}
+                                key={user.id}
+                                onSelect={() => {
+                                  form.setValue("requestorId", user.id);
+                                  setSelectedUserAvatar(user.image);
+                                  setUserListOpen(false);
+                                }}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <Avatar className="h-5 w-5">
+                                    <AvatarImage src={user.image!} alt="profile" className="object-cover" />
+                                    <AvatarFallback>
+                                      <Image
+                                        className="dark:invert object-cover"
+                                        src="/default.svg"
+                                        alt="default logo"
+                                        width={0}
+                                        height={0}
+                                        style={{ width: "auto", height: "auto" }}
+                                        priority
+                                      />
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <span className="font-medium">{user.name}</span>
+                                </div>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      )}
                     </Command>
                   </PopoverContent>
                 </Popover>

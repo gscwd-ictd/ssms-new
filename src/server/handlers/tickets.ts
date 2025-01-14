@@ -1,5 +1,5 @@
 import { db } from "@ssms/lib/drizzle";
-import { aliasedTable, eq } from "drizzle-orm";
+import { aliasedTable, between, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { categories, subCategories, supportTypes, tickets } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
@@ -44,6 +44,42 @@ export const ticketsHandler = new Hono()
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
+  .get("/range", async (c) => {
+    const assignee = aliasedTable(user, "asignee");
+
+    const from = c.req.query("from");
+    const to = c.req.query("to");
+
+    const fromDate = new Date(from as string);
+    const toDate = new Date(to as string);
+
+    try {
+      const stmt = db
+        .select({
+          id: tickets.id,
+          requestedBy: user.name,
+          requestedByAvatar: user.image,
+          assignedTo: assignee.name,
+          assignedToAvatar: assignee.image,
+          details: tickets.details,
+          status: tickets.status,
+          createdAt: tickets.createdAt,
+          updatedAt: tickets.updatedAt,
+        })
+        .from(tickets)
+        .innerJoin(user, eq(user.id, tickets.requestorId))
+        .leftJoin(assignee, eq(assignee.id, tickets.assignedId))
+        .where(between(tickets.createdAt, fromDate, toDate))
+        .prepare("get_all_tickets_filter_by_date_range");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
   .get("/:id", async (c) => {
     const ticketId = c.req.param("id");
 
@@ -58,7 +94,8 @@ export const ticketsHandler = new Hono()
         requestedBy: user.name,
         requestedByAvatar: user.image,
         requestedByEmail: user.email,
-        assignedTo: assignee.name,
+        assignedToId: assignee.id,
+        assignedToName: assignee.name,
         assignedToAvatar: assignee.image,
         assignedToEmail: assignee.email,
         details: tickets.details,
@@ -93,6 +130,7 @@ export const ticketsHandler = new Hono()
         .insert(tickets)
         .values(body)
         .returning({
+          id: tickets.id,
           requestorId: tickets.requestorId,
           categoryId: tickets.categoryId,
           subCategoryId: tickets.subCategoryId,

@@ -48,6 +48,8 @@ export const AssignTicketBadgeDialog: FunctionComponent<AssignTicketBadgeDialogP
   const [userListOpen, setUserListOpen] = useState(false);
   const [selectedUserAvatar, setSelectedUserAvatar] = useState<string | null>(null);
 
+  // const router = useRouter();
+
   const queryClient = useQueryClient();
 
   const form = useForm({

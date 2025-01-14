@@ -14,11 +14,6 @@ type AssignedToColumnProps = {
 export const AssignedToColumn: FunctionComponent<AssignedToColumnProps> = ({ row }) => {
   const userSession = useUserSession((state) => state.userSession);
 
-  console.log({
-    assignedTo: row.getValue("assignedTo"),
-    role: userSession?.user.role,
-  });
-
   if (row.original.status === "cancelled" && !row.getValue("assignedTo")) {
     return <Badge variant="destructive">Not Assigned</Badge>;
   }

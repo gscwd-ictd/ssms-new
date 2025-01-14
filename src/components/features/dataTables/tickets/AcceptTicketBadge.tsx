@@ -19,6 +19,7 @@ import { session, user } from "@ssms/server/db/schemas/auth";
 import { AcceptTicketSchema } from "@ssms/server/validations/ticketsSchemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FunctionComponent } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -35,6 +36,8 @@ export type UserInSession = {
 
 export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ ticketId, mode }) => {
   const queryClient = useQueryClient();
+
+  const router = useRouter();
 
   const userSession = useUserSession((state) => state.userSession);
 
@@ -57,8 +60,13 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
       return updatedTicket;
     },
     onSuccess: () => {
-      toast.success("Successfully accepted the ticket!");
-      queryClient.invalidateQueries({ queryKey: ["get-all-tickets", "get-ticket-details"] });
+      toast.success("You have successfully accepted the ticket!");
+
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-tickets", "get-ticket-details"],
+      });
+
+      router.push(`/tickets/${ticketId}`);
     },
   });
 
@@ -91,6 +99,11 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
             onClick={() => {
               const assignedId = userSession?.user.id;
               mutate({ assignedId, status: "ongoing" });
+              if (mode === "badge") {
+                router.push(`/tickets/${ticketId}`);
+              } else {
+                location.reload();
+              }
             }}
           >
             Continue
