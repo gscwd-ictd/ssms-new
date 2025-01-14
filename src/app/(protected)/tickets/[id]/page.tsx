@@ -29,7 +29,7 @@ export default function TicketDetails() {
   });
 
   return (
-    <div className="grid grid-cols-12 gap-10">
+    <div className="grid grid-cols-12 gap-20">
       <div className="col-span-8">
         <TicketSummary />
       </div>

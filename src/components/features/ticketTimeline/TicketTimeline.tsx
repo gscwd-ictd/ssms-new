@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@ssms/components/ui/avatar";
 import { Badge } from "@ssms/components/ui/badge";
-import { Clock, Tag, CircleCheckBig, CircleSlash2, ArrowRightLeft, UserRoundPen } from "lucide-react";
+import { Clock, CircleCheckBig, CircleSlash2, ArrowRightLeft, UserRoundPen } from "lucide-react";
 
 export type Ticket = {
   id: string;
@@ -168,9 +168,9 @@ export const TicketTimeline: FunctionComponent<TimelineProps> = ({ ticket }) => 
             {activity.category && activity.category.subCategory && (
               <div className="flex gap-1">
                 <Badge variant="outline" className="flex items-center gap-1">
-                  <Tag className="h-3 w-3" />
-                  {activity.category.name} / {activity.category.subCategory}
+                  {activity.category.name}
                 </Badge>
+                <Badge variant="outline">{activity.category.subCategory}</Badge>
                 <Badge variant="outline">{activity.category.type}</Badge>
               </div>
             )}

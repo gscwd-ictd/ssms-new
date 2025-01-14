@@ -23,6 +23,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
 import { useUserSession } from "@ssms/components/stores/useUserSession";
+import { Badge } from "@ssms/components/ui/badge";
 
 type ResolveTicketDialogProps = {
   ticketDetails: TicketDetails;
@@ -158,83 +159,96 @@ export const ResolveTicketDialog: FunctionComponent<ResolveTicketDialogProps> = 
         </DialogHeader>
         <div>
           <Form {...form}>
-            <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex items-center gap-2 justify-between">
-                <FormField
-                  control={form.control}
-                  name="categoryId"
-                  render={({ field }) => (
-                    <>
-                      {!ticketDetails.categoryId ? (
-                        <>
-                          <FormItem className="w-full">
-                            <FormLabel>Category</FormLabel>
-                            <Select
-                              onValueChange={(e) => {
-                                field.onChange(e);
-                                setSelectedCategory(e);
-                              }}
-                              // defaultValue={field.value === null ? "Select a category" : field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select a category" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {categories?.map((category) => (
-                                  <SelectItem key={category.id} value={category.id}>
-                                    {category.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        </>
-                      ) : (
-                        <>{ticketDetails.categoryName}</>
-                      )}
-                    </>
-                  )}
-                />
+            <form className="space-y-7" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="space-y-7">
+                <h1 className="text-2xl font-semibold">{ticketDetails.details}</h1>
+                <div
+                  className={`${
+                    ticketDetails.categoryId && ticketDetails.subCategoryId
+                      ? "gap-1"
+                      : "gap-2 justify-between"
+                  } flex items-center`}
+                >
+                  <FormField
+                    control={form.control}
+                    name="categoryId"
+                    render={({ field }) => (
+                      <>
+                        {!ticketDetails.categoryId ? (
+                          <>
+                            <FormItem className="w-full">
+                              <FormLabel>Category</FormLabel>
+                              <Select
+                                onValueChange={(e) => {
+                                  field.onChange(e);
+                                  setSelectedCategory(e);
+                                }}
+                                // defaultValue={field.value === null ? "Select a category" : field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select a category" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {categories?.map((category) => (
+                                    <SelectItem key={category.id} value={category.id}>
+                                      {category.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          </>
+                        ) : (
+                          <Badge variant="outline">{ticketDetails.categoryName}</Badge>
+                        )}
+                      </>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="subCategoryId"
-                  render={({ field }) => (
-                    <>
-                      {!ticketDetails.subCategoryId ? (
-                        <>
-                          <FormItem className="w-full">
-                            <FormLabel>Sub Category</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              // defaultValue={field.value as string}
-                              disabled={
-                                form.getValues().categoryId === "" || form.getValues().categoryId === null
-                              }
-                            >
-                              <FormControl>
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select a sub category" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {subCategories?.map((subCategory) => (
-                                  <SelectItem key={subCategory.id} value={subCategory.id}>
-                                    {subCategory.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        </>
-                      ) : (
-                        <>{ticketDetails.subCategoryName}</>
-                      )}
-                    </>
+                  <FormField
+                    control={form.control}
+                    name="subCategoryId"
+                    render={({ field }) => (
+                      <>
+                        {!ticketDetails.subCategoryId ? (
+                          <>
+                            <FormItem className="w-full">
+                              <FormLabel>Sub Category</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                // defaultValue={field.value as string}
+                                disabled={
+                                  form.getValues().categoryId === "" || form.getValues().categoryId === null
+                                }
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select a sub category" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {subCategories?.map((subCategory) => (
+                                    <SelectItem key={subCategory.id} value={subCategory.id}>
+                                      {subCategory.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          </>
+                        ) : (
+                          <Badge variant="outline">{ticketDetails.subCategoryName}</Badge>
+                        )}
+                      </>
+                    )}
+                  />
+
+                  {ticketDetails.supportTypeId && (
+                    <Badge variant="outline">{ticketDetails.supportTypeName}</Badge>
                   )}
-                />
+                </div>
               </div>
 
               <FormField
@@ -266,7 +280,7 @@ export const ResolveTicketDialog: FunctionComponent<ResolveTicketDialogProps> = 
                         </FormItem>
                       </>
                     ) : (
-                      <>{ticketDetails.supportTypeName}</>
+                      <></>
                     )}
                   </>
                 )}

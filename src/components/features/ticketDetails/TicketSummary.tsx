@@ -125,7 +125,7 @@ export const TicketSummary: FunctionComponent = () => {
 
   if (ticket) {
     return (
-      <Card>
+      <Card className="border-transparent">
         <CardHeader className="space-y-7">
           <div className="flex items-start justify-between">
             <div className="space-y-2">
@@ -301,12 +301,10 @@ export const TicketSummary: FunctionComponent = () => {
           </div>
         </CardContent>
 
-        <Separator />
-
         <CardFooter>
           <span className="text-muted-foreground mt-5 flex items-center gap-1">
             <Clock className="h-4 w-4" />
-            {format(ticket.updatedAt as Date, "MMMM d, yyyy, hh:mm:ss a")}
+            Last updated at {format(ticket.updatedAt as Date, "MMMM d, yyyy, hh:mm:ss a")}
           </span>
         </CardFooter>
       </Card>
