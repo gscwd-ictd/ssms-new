@@ -3,14 +3,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@ssms/components/ui/pop
 import { cn } from "@ssms/lib/shadcn";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { FunctionComponent, useState } from "react";
-import { addDays, format } from "date-fns";
+import { addDays, format, startOfMonth } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { Calendar } from "@ssms/components/ui/calendar";
 import { useDateFilter } from "@ssms/components/stores/useDateFilter";
 
 export const DateRangeFilter: FunctionComponent = () => {
   const [date, setDate] = useState<DateRange | undefined>({
-    from: addDays(new Date(), -30),
+    from: startOfMonth(new Date()),
     to: addDays(new Date(), +1),
   });
 

@@ -21,6 +21,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FunctionComponent } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type AcceptTicketBadgeProps = {
@@ -59,10 +60,12 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
       return updatedTicket;
     },
     onSuccess: () => {
-      // toast.success("Successfully accepted the ticket!");
+      toast.success("You have successfully accepted the ticket!");
+
       queryClient.invalidateQueries({
         queryKey: ["get-all-tickets", "get-ticket-details"],
       });
+
       router.push(`/tickets/${ticketId}`);
     },
   });

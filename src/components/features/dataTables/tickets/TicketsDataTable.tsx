@@ -4,21 +4,16 @@ import { DataTable } from "@ssms/components/ui/data-table/data-table";
 import { $tickets } from "@ssms/lib/rpcClient";
 import { useQuery } from "@tanstack/react-query";
 import { FunctionComponent, useEffect, useState } from "react";
-import { MutatedTickets, ticketsColumns } from "./columns";
-import { authClient } from "@ssms/lib/authCient";
+import { MutatedTickets, useTicketsColumns } from "./columns";
 import { useDateFilter } from "@ssms/components/stores/useDateFilter";
+import { useUserSession } from "@ssms/components/stores/useUserSession";
 
 export const TicketsDataTable: FunctionComponent = () => {
   const dateFilter = useDateFilter((state) => state.dateRange);
 
-  const [loading, setLoading] = useState(false);
+  const session = useUserSession((state) => state.userSession);
 
-  const { data: session, isPending: sessionLoading } = useQuery({
-    queryKey: ["get-session-details"],
-    queryFn: async () => {
-      return (await authClient.getSession()).data;
-    },
-  });
+  const [loading, setLoading] = useState(false);
 
   const { data: tickets, isPending: ticketsLoading } = useQuery({
     queryKey: ["get-all-tickets", dateFilter?.from, dateFilter?.to],
@@ -54,25 +49,21 @@ export const TicketsDataTable: FunctionComponent = () => {
         return tickets;
       }
     },
-    enabled: !!session,
+    enabled: !!session?.session,
   });
 
+  const ticketsColumns = useTicketsColumns(tickets);
+
   useEffect(() => {
-    if (sessionLoading || ticketsLoading) {
+    if (ticketsLoading) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [sessionLoading, ticketsLoading]);
-
-  if (loading) {
-    return <DataTable data={[]} columns={ticketsColumns} loading={loading} />;
-  }
+  }, [ticketsLoading]);
 
   // Instead of conditionally rendering different DataTable instances,
   // render a single instance with proper props
   // return <DataTable data={tickets ?? []} columns={ticketsColumns} loading={isLoading} />;
-  if (tickets) {
-    return <DataTable data={tickets} columns={ticketsColumns} />;
-  }
+  return <DataTable data={tickets ?? []} columns={ticketsColumns} loading={loading} />;
 };
