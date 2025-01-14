@@ -44,7 +44,7 @@ export type TicketDetails = {
   updatedAt: Date | null;
 };
 
-export const TicketDetailsHeader: FunctionComponent = () => {
+export const TicketSummary: FunctionComponent = () => {
   const param = useParams<{ id: string }>();
 
   const userSession = useUserSession((state) => state.userSession);

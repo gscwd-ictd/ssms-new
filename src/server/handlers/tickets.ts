@@ -108,6 +108,12 @@ export const ticketsHandler = new Hono()
         status: tickets.status,
         createdAt: tickets.createdAt,
         updatedAt: tickets.updatedAt,
+        startedAt: tickets.startedAt,
+        cancelledAt: tickets.cancelledAt,
+        resolvedAt: tickets.resolvedAt,
+        cancelledDueTo: tickets.cancelledDueTo,
+        action: tickets.action,
+        assessment: tickets.assessment,
       })
       .from(tickets)
       .innerJoin(user, eq(user.id, tickets.requestorId))
