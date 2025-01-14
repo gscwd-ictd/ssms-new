@@ -64,6 +64,13 @@
       "when": 1736741646362,
       "tag": "0008_curious_frightful_four",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1736830590241,
+      "tag": "0009_workable_pyro",
+      "breakpoints": true
     }
   ]
 }

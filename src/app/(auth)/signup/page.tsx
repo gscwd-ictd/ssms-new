@@ -254,8 +254,9 @@ export default function SignUp() {
         password,
         name,
         office: "pzsdwopxfiorcowedcrhjqayejmf",
-        department: "uefglvaisbhybmilfobpcakhjlsv",
-        division: "qrmnqfgjvlwponqwtcxgzckgdgku",
+        // department: "uefglvaisbhybmilfobpcakhjlsv",
+        // division: "qrmnqfgjvlwponqwtcxgzckgdgku",
+
         // office: "iipxgganqfybvrdokclqprdmitdq",
         // department: "vkvegmanffdwqkraguxlpxwfaxyc",
         // division: "cqgfqcfklheovjqcvqtujthfcpiz",
