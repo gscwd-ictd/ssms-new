@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@ssms/components/ui/dropdown-menu";
 
-export function ModeToggle() {
+export const ThemeToggler: React.FunctionComponent = () => {
   const { setTheme } = useTheme();
 
   return (
@@ -31,4 +31,4 @@ export function ModeToggle() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};

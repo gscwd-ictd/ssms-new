@@ -18,6 +18,7 @@ import { useUserSession } from "@ssms/components/stores/useUserSession";
 import { useMutation } from "@tanstack/react-query";
 import { authClient } from "@ssms/lib/authCient";
 import { useRouter } from "next/navigation";
+import { ThemeToggler } from "../theme/ThemeToggler";
 // import {
 //   NavigationMenu,
 //   NavigationMenuContent,
@@ -120,9 +121,10 @@ export const AppTopbar: FunctionComponent = () => {
               <HelpCircle className="h-4 w-4" />
             </Button>
 
-            <Button variant="outline" size="icon">
+            <ThemeToggler />
+            {/* <Button variant="outline" size="icon">
               <Settings className="h-4 w-4" />
-            </Button>
+            </Button> */}
 
             {/* User Menu */}
             <DropdownMenu>
