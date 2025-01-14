@@ -125,7 +125,7 @@ export const TicketSummary: FunctionComponent = () => {
 
   if (ticket) {
     return (
-      <Card className="border-transparent">
+      <Card>
         <CardHeader className="space-y-7">
           <div className="flex items-start justify-between">
             <div className="space-y-2">

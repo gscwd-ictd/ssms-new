@@ -205,10 +205,10 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
                         <CommandList>
                           <CommandEmpty>No user found.</CommandEmpty>
                           <CommandGroup>
-                            {userList?.map((user) => (
+                            {userList?.map((user, index) => (
                               <CommandItem
                                 value={user.name}
-                                key={user.id}
+                                key={index}
                                 onSelect={() => {
                                   form.setValue("requestorId", user.id);
                                   setSelectedUserAvatar(user.image);
@@ -266,8 +266,8 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories?.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                      {categories?.map((category, index) => (
+                        <SelectItem key={index} value={category.id}>
                           {category.name}
                         </SelectItem>
                       ))}
@@ -296,8 +296,8 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {subCategories?.map((subCategory) => (
-                        <SelectItem key={subCategory.id} value={subCategory.id}>
+                      {subCategories?.map((subCategory, index) => (
+                        <SelectItem key={index} value={subCategory.id}>
                           {subCategory.name}
                         </SelectItem>
                       ))}
@@ -323,8 +323,8 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {supportTypes?.map((supportType) => (
-                      <SelectItem key={supportType.id} value={supportType.id}>
+                    {supportTypes?.map((supportType, index) => (
+                      <SelectItem key={index} value={supportType.id}>
                         {supportType.name}
                       </SelectItem>
                     ))}
