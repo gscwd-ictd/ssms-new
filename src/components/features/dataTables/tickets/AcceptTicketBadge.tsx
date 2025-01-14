@@ -39,6 +39,8 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
 
   const router = useRouter();
 
+  // const param = useParams<{ id: string }>();
+
   const userSession = useUserSession((state) => state.userSession);
 
   const { mutate } = useMutation({
@@ -60,13 +62,11 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
       return updatedTicket;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["get-ticket-details"] });
+
       toast.success("You have successfully accepted the ticket!");
 
-      queryClient.invalidateQueries({
-        queryKey: ["get-all-tickets", "get-ticket-details"],
-      });
-
-      router.push(`/tickets/${ticketId}`);
+      // router.push(`/tickets/${ticketId}`);
     },
   });
 
@@ -101,8 +101,6 @@ export const AcceptTicketBadge: FunctionComponent<AcceptTicketBadgeProps> = ({ t
               mutate({ assignedId, status: "ongoing" });
               if (mode === "badge") {
                 router.push(`/tickets/${ticketId}`);
-              } else {
-                location.reload();
               }
             }}
           >

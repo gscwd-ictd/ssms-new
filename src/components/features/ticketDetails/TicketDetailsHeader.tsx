@@ -65,7 +65,7 @@ export const TicketDetailsHeader: FunctionComponent = () => {
   }, [commentForm, userSession]);
 
   const { data: ticket } = useQuery<TicketDetails>({
-    queryKey: ["get-ticket-details"],
+    queryKey: ["get-ticket-details", param.id],
     queryFn: async () => {
       const res = await $tickets[":id"].$get({
         param: {
@@ -127,7 +127,7 @@ export const TicketDetailsHeader: FunctionComponent = () => {
     return (
       <Card>
         <CardHeader className="space-y-7">
-          <div className="flex items-center justify-between mr-20">
+          <div className="flex items-start justify-between">
             <div className="space-y-2">
               <Badge
                 variant="secondary"
@@ -148,86 +148,88 @@ export const TicketDetailsHeader: FunctionComponent = () => {
                 {ticket.details}
               </h1>
 
-              <div className="flex items-center gap-4">
-                <span className="text-muted-foreground flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  Created {format(ticket.createdAt, "MMMM d, yyyy, hh:mm:ss a")}
-                </span>
-                <span
-                  role="button"
-                  onClick={() => commentForm.setFocus("details")}
-                  className="text-muted-foreground flex items-center gap-1 cursor-pointer hover:underline"
-                >
-                  <MessagesSquare className="h-4 w-4" />
-                  {comments?.length === 0 ? "No" : comments?.length} comments
-                </span>
-              </div>
-            </div>
+              <div className="space-y-10">
+                <div className="flex items-center gap-4">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    Created {format(ticket.createdAt, "MMMM d, yyyy, hh:mm:ss a")}
+                  </span>
+                  <span
+                    role="button"
+                    onClick={() => commentForm.setFocus("details")}
+                    className="text-muted-foreground flex items-center gap-1 cursor-pointer hover:underline"
+                  >
+                    <MessagesSquare className="h-4 w-4" />
+                    {comments?.length === 0 ? "No" : comments?.length} comments
+                  </span>
+                </div>
 
-            <div className="flex items-center gap-10">
-              <div className="space-y-2">
-                <Label className="text-muted-foreground">Requested by:</Label>
+                <div className="flex items-center gap-10 pb-2">
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground">Requested by:</Label>
 
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={ticket.requestedByAvatar!} className="object-cover" />
-                    <AvatarFallback className="font-semibold text-lg">
-                      {ticket?.requestedBy.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={ticket.requestedByAvatar!} className="object-cover" />
+                        <AvatarFallback className="font-semibold text-lg">
+                          {ticket?.requestedBy.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
 
-                  <div>
-                    <p className="font-bold">{ticket.requestedBy}</p>
-                    <p className="text-sm text-muted-foreground">{ticket.requestedByEmail}</p>
+                      <div>
+                        <p className="font-bold">{ticket.requestedBy}</p>
+                        <p className="text-sm text-muted-foreground">{ticket.requestedByEmail}</p>
+                      </div>
+                    </div>
                   </div>
+
+                  {ticket.assignedToName && (
+                    <>
+                      <div className="h-10">
+                        <Separator orientation="vertical" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground">Assgned to:</Label>
+                        {ticket.assignedToName ? (
+                          <>
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-8 w-8">
+                                <AvatarImage src={ticket.assignedToAvatar!} className="object-cover" />
+                                <AvatarFallback className="font-semibold text-lg">
+                                  {ticket.assignedToName?.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+
+                              <div>
+                                <p className="font-bold">{ticket.assignedToName}</p>
+                                <p className="text-sm text-muted-foreground">{ticket.assignedToEmail}</p>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-
-              {ticket.assignedToName && (
-                <>
-                  <div className="h-10">
-                    <Separator orientation="vertical" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">Assgned to:</Label>
-                    {ticket.assignedToName ? (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={ticket.assignedToAvatar!} className="object-cover" />
-                            <AvatarFallback className="font-semibold text-lg">
-                              {ticket.assignedToName?.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-
-                          <div>
-                            <p className="font-bold">{ticket.assignedToName}</p>
-                            <p className="text-sm text-muted-foreground">{ticket.assignedToEmail}</p>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </>
-              )}
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            {/* <Button variant="outline" disabled={ticket.status !== "open"}>
+            <div className="flex items-center gap-2">
+              {/* <Button variant="outline" disabled={ticket.status !== "open"}>
               Cancel
             </Button> */}
-            <CancelTicketFormDialog status={ticket.status} />
+              <CancelTicketFormDialog status={ticket.status} />
 
-            {userSession?.user.role === "support" && ticket.status === "ongoing" ? (
-              <ResolveTicketDialog ticketDetails={ticket} />
-            ) : (
-              userSession?.user.role === "support" &&
-              ticket.status === "open" && <AcceptTicketBadge ticketId={ticket.id} mode="button" />
-            )}
+              {userSession?.user.role === "support" && ticket.status === "ongoing" ? (
+                <ResolveTicketDialog ticketDetails={ticket} />
+              ) : (
+                userSession?.user.role === "support" &&
+                ticket.status === "open" && <AcceptTicketBadge ticketId={ticket.id} mode="button" />
+              )}
+            </div>
           </div>
         </CardHeader>
 
