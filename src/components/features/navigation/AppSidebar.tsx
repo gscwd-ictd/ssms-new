@@ -113,7 +113,7 @@ export const AppSidebar: FunctionComponent = () => {
         {session?.user.role === "support" && (
           <SidebarGroup>
             <SidebarGroupLabel className="uppercase font-semibold tracking-widest">
-              Configuration
+              Administration
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
