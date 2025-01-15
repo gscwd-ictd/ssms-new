@@ -1,11 +1,14 @@
 "use client";
+
 import SupportDashboard from "@ssms/components/features/dashboardCards/DashboardCard";
-import { CircleCheckBig, CircleSlash2, Tickets, Timer } from "lucide-react";
+import { StatusTrendCard } from "@ssms/components/features/dashboardCards/StatusTrendCard";
+import { TicketsProvider } from "@ssms/components/features/dashboardCards/TicketsContext";
 
 export default function Dashboard() {
   return (
-    <div>
+    <TicketsProvider>
       <SupportDashboard />
-    </div>
+      <StatusTrendCard />
+    </TicketsProvider>
   );
 }

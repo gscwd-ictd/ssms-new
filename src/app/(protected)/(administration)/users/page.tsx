@@ -2,7 +2,7 @@ import { UsersDataTable } from "@ssms/components/features/dataTables/users/Users
 
 export default function Users() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col">
       <header className="py-7 flex items-center justify-between">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">Users</h1>
       </header>

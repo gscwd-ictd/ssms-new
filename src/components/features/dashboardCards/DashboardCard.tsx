@@ -15,34 +15,37 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { Clock, Users, AlertCircle, CheckCircle2, Timer, TrendingUp, TrendingDown } from "lucide-react";
+// import { Users, AlertCircle, CheckCircle2, Timer, TrendingUp, TrendingDown } from "lucide-react";
+import { StatusCards } from "./TestCards";
+import StatusCardsAnother from "./AnotherTestCards";
+import StatusCardsAnother2 from "./AnotherTestCards2";
 
-type Ticket = {
-  id: string;
-  requestedBy: string;
-  requestedByAvatar: string | null;
-  requestedByEmail: string;
-  assignedToId: string | null;
-  assignedToName: string | null;
-  assignedToAvatar: string | null;
-  assignedToEmail: string | null;
-  details: string;
-  categoryId: string;
-  categoryName: string;
-  subCategoryId: string;
-  subCategoryName: string;
-  supportTypeId: string;
-  supportTypeName: string;
-  status: "open" | "ongoing" | "resolved" | "cancelled";
-  createdAt: string;
-  updatedAt: string;
-  startedAt: string | null;
-  cancelledAt: string | null;
-  resolvedAt: string | null;
-  cancelledDueTo: string | null;
-  action: string | null;
-  assessment: string | null;
-};
+// type Ticket = {
+//   id: string;
+//   requestedBy: string;
+//   requestedByAvatar: string | null;
+//   requestedByEmail: string;
+//   assignedToId: string | null;
+//   assignedToName: string | null;
+//   assignedToAvatar: string | null;
+//   assignedToEmail: string | null;
+//   details: string;
+//   categoryId: string;
+//   categoryName: string;
+//   subCategoryId: string;
+//   subCategoryName: string;
+//   supportTypeId: string;
+//   supportTypeName: string;
+//   status: "open" | "ongoing" | "resolved" | "cancelled";
+//   createdAt: string;
+//   updatedAt: string;
+//   startedAt: string | null;
+//   cancelledAt: string | null;
+//   resolvedAt: string | null;
+//   cancelledDueTo: string | null;
+//   action: string | null;
+//   assessment: string | null;
+// };
 
 const SupportDashboard = () => {
   const dailyTickets = [
@@ -72,7 +75,7 @@ const SupportDashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="shadow-none">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Active Tickets</CardTitle>
@@ -132,7 +135,12 @@ const SupportDashboard = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
+      <StatusCards />
+
+      <StatusCardsAnother />
+
+      <StatusCardsAnother2 />
 
       <Card className="shadow-none">
         <CardHeader>
@@ -387,7 +395,7 @@ const SupportDashboard = () => {
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* <div className="grid gap-4 md:grid-cols-2">
         <Card className="shadow-none">
           <CardHeader>
             <CardTitle>Monthly Resolution Time</CardTitle>
@@ -438,7 +446,7 @@ const SupportDashboard = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 };

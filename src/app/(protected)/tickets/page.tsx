@@ -9,7 +9,7 @@ export default function Tickets() {
   const userSession = useUserSession((state) => state.userSession);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col">
       <header className="py-7 flex items-center justify-between">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">Tickets</h1>
         <div className="flex items-center gap-2">

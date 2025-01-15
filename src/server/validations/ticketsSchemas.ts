@@ -73,5 +73,5 @@ export const CancelTicketFormSchema = z.object({
 export const CommentsSchema = z.object({
   userId: z.string().optional(),
   ticketId: z.string().min(28),
-  details: z.string(),
+  details: z.string({ message: "Please write your comment first." }),
 });
