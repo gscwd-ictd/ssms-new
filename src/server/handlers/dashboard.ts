@@ -34,7 +34,7 @@ export const dashboardHandler = new Hono()
   .get("/tickets-by-assignment/:id", async (c) => {
     const assignedId = c.req.param("id");
 
-    const status = c.req.query("status") as "all" | "open" | "ongoing" | "cancelled" | "resolved";
+    const status = c.req.query("status") as "open" | "ongoing" | "cancelled" | "resolved";
     const from = c.req.query("from");
     const to = c.req.query("to");
 
@@ -46,62 +46,36 @@ export const dashboardHandler = new Hono()
     const toDate = new Date(to as string);
 
     try {
-      if (status === "all") {
-        const stmt = db
-          .select({
-            id: tickets.id,
-            requestedByName: user.name,
-            requestedByEmail: user.email,
-            requestedByAvatar: user.image,
-            details: tickets.details,
-            category: ca.name,
-            subCategory: sc.name,
-            supportType: su.name,
-            status: tickets.status,
-            requestedAt: tickets.createdAt,
-          })
-          .from(tickets)
-          .innerJoin(user, eq(user.id, tickets.requestorId))
-          .leftJoin(ca, eq(ca.id, tickets.categoryId))
-          .leftJoin(sc, eq(sc.id, tickets.subCategoryId))
-          .leftJoin(su, eq(su.id, tickets.supportTypeId))
-          .where(and(eq(tickets.assignedId, assignedId), between(tickets.createdAt, fromDate, toDate)))
-          .prepare("get_tickets_by_assignment");
-
-        const res = await stmt.execute();
-
-        return c.json(res);
-      } else {
-        const stmt = db
-          .select({
-            id: tickets.id,
-            requestedByName: user.name,
-            requestedByEmail: user.email,
-            requestedByAvatar: user.image,
-            details: tickets.details,
-            category: ca.name,
-            subCategory: sc.name,
-            supportType: su.name,
-            status: tickets.status,
-            requestedAt: tickets.createdAt,
-          })
-          .from(tickets)
-          .innerJoin(user, eq(user.id, tickets.requestorId))
-          .leftJoin(ca, eq(ca.id, tickets.categoryId))
-          .leftJoin(sc, eq(sc.id, tickets.subCategoryId))
-          .leftJoin(su, eq(su.id, tickets.supportTypeId))
-          .where(
-            and(
-              eq(tickets.status, status),
-              and(eq(tickets.assignedId, assignedId), between(tickets.createdAt, fromDate, toDate))
-            )
+      const stmt = db
+        .select({
+          id: tickets.id,
+          requestedByName: user.name,
+          requestedByEmail: user.email,
+          requestedByAvatar: user.image,
+          details: tickets.details,
+          category: ca.name,
+          subCategory: sc.name,
+          supportType: su.name,
+          status: tickets.status,
+          requestedAt: tickets.createdAt,
+        })
+        .from(tickets)
+        .innerJoin(user, eq(user.id, tickets.requestorId))
+        .leftJoin(ca, eq(ca.id, tickets.categoryId))
+        .leftJoin(sc, eq(sc.id, tickets.subCategoryId))
+        .leftJoin(su, eq(su.id, tickets.supportTypeId))
+        .where(
+          and(
+            eq(tickets.status, status),
+            and(eq(tickets.assignedId, assignedId), between(tickets.createdAt, fromDate, toDate))
           )
-          .prepare("get_tickets_by_assignment");
+        )
+        .orderBy(tickets.createdAt)
+        .prepare("get_tickets_by_assignment");
 
-        const res = await stmt.execute();
+      const res = await stmt.execute();
 
-        return c.json(res);
-      }
+      return c.json(res);
     } catch (error) {
       console.error(error);
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
