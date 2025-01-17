@@ -31,11 +31,17 @@ export const TicketAssignment: FunctionComponent = () => {
   const router = useRouter();
 
   const { data: tickets } = useQuery({
-    queryKey: ["get-tickets-by-assignment", dateRange?.from, dateRange?.to, selectedStatus],
+    queryKey: [
+      "get-tickets-by-assignment",
+      dateRange?.from,
+      dateRange?.to,
+      selectedStatus,
+      userSession?.user.id,
+    ],
     queryFn: async () => {
       const res = await $dashboard["tickets-by-assignment"][":id"].$get({
         param: { id: userSession?.user.id as string },
-        //@ts-expect-error this is just a type error
+        //@ts-expect-error this is just a type error because query did not have zod validator
         query: {
           from: dateRange?.from,
           to: dateRange?.to,
