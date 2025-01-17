@@ -101,8 +101,8 @@ export const AppSidebar: FunctionComponent = () => {
           <SidebarGroupLabel className="uppercase font-semibold tracking-widest">General</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {mainItems.map((item, index) => (
+                <SidebarMenuItem key={index}>
                   <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
                     <Link href={item.url}>
                       <item.icon />
@@ -122,8 +122,8 @@ export const AppSidebar: FunctionComponent = () => {
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {configItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                {configItems.map((item, index) => (
+                  <SidebarMenuItem key={index}>
                     <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
                       <Link href={item.url}>
                         <item.icon />

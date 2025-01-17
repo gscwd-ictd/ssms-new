@@ -239,8 +239,8 @@ export const TicketSummary: FunctionComponent = () => {
 
           {comments !== undefined && comments.length > 0 && (
             <>
-              {comments.map((comment) => (
-                <div key={comment.id} className="mt-5">
+              {comments.map((comment, index) => (
+                <div key={index} className="mt-5">
                   <div className="flex items-center space-x-4">
                     <Avatar>
                       <AvatarImage src={comment.image!} className="object-cover" />
