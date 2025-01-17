@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FunctionComponent, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ssms/components/ui/card";
 import { Clock, Database } from "lucide-react";
@@ -89,7 +91,7 @@ export const TicketAssignment: FunctionComponent = () => {
               </div>
             </div>
           ) : (
-            <div className="h-[300px] flex items-start justify-between overflow-y-auto pr-5">
+            <div className="h-[300px] flex items-start justify-between overflow-y-auto">
               <ul className="w-full">
                 {tickets?.map((ticket, index) => {
                   return (

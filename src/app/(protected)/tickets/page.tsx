@@ -4,6 +4,8 @@ import { AddTicketDialog } from "@ssms/components/features/addTicket/AddTicketDi
 import { TicketsDataTable } from "@ssms/components/features/dataTables/tickets/TicketsDataTable";
 import { DateRangeFilter } from "@ssms/components/features/ticketDetails/DateRangeFilter";
 import { useUserSession } from "@ssms/components/stores/useUserSession";
+import { Button } from "@ssms/components/ui/button";
+import { PrinterCheck } from "lucide-react";
 
 export default function Tickets() {
   const userSession = useUserSession((state) => state.userSession);
@@ -15,6 +17,10 @@ export default function Tickets() {
         <div className="flex items-center gap-2">
           <DateRangeFilter />
           <AddTicketDialog role={userSession?.user.role} />
+          <Button variant="secondary">
+            <PrinterCheck className="text-indigo-500" />
+            <span>Print Report</span>
+          </Button>
         </div>
       </header>
 

@@ -12,6 +12,7 @@ import {
 import { Button } from "../../ui/button";
 import { AddTicketForm } from "./AddTicketForm";
 import { AddTicketFormUser } from "./AddTicketFormUser";
+import { FilePlus2 } from "lucide-react";
 
 type AddTicketDialogProps = {
   role: "user" | "support" | null | undefined;
@@ -24,7 +25,8 @@ export const AddTicketDialog: FunctionComponent<AddTicketDialogProps> = ({ role 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary" onClick={() => setOpen(true)}>
-          Add Ticket
+          <FilePlus2 className="text-green-500" />
+          <span>Add Ticket</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
