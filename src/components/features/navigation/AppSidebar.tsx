@@ -14,7 +14,16 @@ import {
 } from "@ssms/components/ui/sidebar";
 import { authClient } from "@ssms/lib/authCient";
 import { useQuery } from "@tanstack/react-query";
-import { FilePen, Folder, Hammer, Settings, SquareDashedMousePointer, User, Users } from "lucide-react";
+import {
+  FilePen,
+  Folder,
+  Hammer,
+  Printer,
+  Settings,
+  SquareDashedMousePointer,
+  User,
+  Users,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
 import Link from "next/link";
@@ -32,6 +41,11 @@ const mainItems = [
     title: "Tickets",
     url: "/tickets",
     icon: FilePen,
+  },
+  {
+    title: "Reports",
+    url: "/reports",
+    icon: Printer,
   },
   {
     title: "Profile",
