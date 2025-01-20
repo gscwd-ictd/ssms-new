@@ -3,6 +3,11 @@ import { MonthlyTicketLoad } from "@ssms/components/features/dashboardCards/Mont
 import { StatusCard } from "@ssms/components/features/dashboardCards/StatusCard";
 import { TicketAssignment } from "@ssms/components/features/dashboardCards/TicketAssignment";
 import { WeeklyTicketVolume } from "@ssms/components/features/dashboardCards/TicketVolume";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 export default async function Dashboard() {
   return (

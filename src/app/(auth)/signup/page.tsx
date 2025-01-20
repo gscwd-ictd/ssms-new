@@ -254,6 +254,7 @@ export default function SignUp() {
         password,
         name,
         office: "pzsdwopxfiorcowedcrhjqayejmf",
+        position: "Data Encoder",
         // department: "uefglvaisbhybmilfobpcakhjlsv",
         // division: "qrmnqfgjvlwponqwtcxgzckgdgku",
 

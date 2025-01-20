@@ -10,6 +10,7 @@ export const user = pgTable("users", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
   image: text("image"),
+  position: text("position"),
   office: text("office_id").references(() => office.id),
   department: text("department_id").references(() => department.id),
   division: text("division_id").references(() => division.id),

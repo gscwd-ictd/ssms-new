@@ -1,7 +1,12 @@
+"use client";
+
 import React, { FunctionComponent } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@ssms/components/ui/avatar";
 import { Badge } from "@ssms/components/ui/badge";
 import { Clock, CircleCheckBig, CircleSlash2, ArrowRightLeft, UserRoundPen } from "lucide-react";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { $tickets } from "@ssms/lib/rpcClient";
 
 export type Ticket = {
   id: string;
@@ -28,10 +33,6 @@ export type Ticket = {
   cancelledDueTo: string | null;
   action: string | null;
   assessment: string | null;
-};
-
-type TimelineProps = {
-  ticket: Ticket;
 };
 
 type User = {
@@ -68,7 +69,28 @@ type TimelineEvent = {
     }
 );
 
-export const TicketTimeline: FunctionComponent<TimelineProps> = ({ ticket }) => {
+export const TicketTimeline: FunctionComponent = () => {
+  const param = useParams<{ id: string }>();
+
+  const { data: ticket } = useQuery<Ticket>({
+    queryKey: ["get-ticket-details", param.id],
+    queryFn: async () => {
+      const res = await $tickets[":id"].$get({
+        param: {
+          id: param.id,
+        },
+      });
+
+      const ticketDetails = await res.json();
+
+      if (!res.ok) {
+        throw ticketDetails;
+      }
+
+      return ticketDetails;
+    },
+  });
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString("en-US", {
@@ -206,39 +228,41 @@ export const TicketTimeline: FunctionComponent<TimelineProps> = ({ ticket }) => 
     }
   };
 
-  return (
-    <div className="space-y-7">
-      <div>
-        <h1 className="text-xl font-semibold leading-none tracking-tight">Activity Timeline</h1>
-      </div>
-      <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:w-0.5 before:bg-secondary">
-        {getTimelineEvents(ticket).map((activity) => (
-          <div key={activity.id} className="relative flex gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border bg-secondary">
-              {getActivityIcon(activity.type)}
-            </div>
-
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                {activity.user && (
-                  <>
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src={activity.user.avatar || undefined} className="object-cover" />
-                      <AvatarFallback>{activity.user.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium">{activity.user.name}</span>
-                  </>
-                )}
-                <span className="text-sm text-muted-foreground">{formatDate(activity.timestamp)}</span>
+  if (ticket) {
+    return (
+      <div className="space-y-7">
+        <div>
+          <h1 className="text-xl font-semibold leading-none tracking-tight">Activity Timeline</h1>
+        </div>
+        <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:w-0.5 before:bg-secondary">
+          {getTimelineEvents(ticket).map((activity) => (
+            <div key={activity.id} className="relative flex gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border bg-secondary">
+                {getActivityIcon(activity.type)}
               </div>
 
-              <div className="mt-1">
-                <ActivityContent activity={activity} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  {activity.user && (
+                    <>
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={activity.user.avatar || undefined} className="object-cover" />
+                        <AvatarFallback>{activity.user.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm font-medium">{activity.user.name}</span>
+                    </>
+                  )}
+                  <span className="text-sm text-muted-foreground">{formatDate(activity.timestamp)}</span>
+                </div>
+
+                <div className="mt-1">
+                  <ActivityContent activity={activity} />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };

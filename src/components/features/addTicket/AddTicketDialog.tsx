@@ -13,13 +13,16 @@ import { Button } from "../../ui/button";
 import { AddTicketForm } from "./AddTicketForm";
 import { AddTicketFormUser } from "./AddTicketFormUser";
 import { FilePlus2 } from "lucide-react";
+import { useUserSession } from "@ssms/components/stores/useUserSession";
 
-type AddTicketDialogProps = {
-  role: "user" | "support" | null | undefined;
-};
+// type AddTicketDialogProps = {
+//   role: "user" | "support" | null | undefined;
+// };
 
-export const AddTicketDialog: FunctionComponent<AddTicketDialogProps> = ({ role }) => {
+export const AddTicketDialog: FunctionComponent = () => {
   const [open, setOpen] = useState(false);
+
+  const userSession = useUserSession((state) => state.userSession);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -34,8 +37,8 @@ export const AddTicketDialog: FunctionComponent<AddTicketDialogProps> = ({ role 
           <DialogTitle>Add ticket</DialogTitle>
           <DialogDescription>Create a ticket for any IT related issues</DialogDescription>
         </DialogHeader>
-        {role === "support" && <AddTicketForm setDialogOpen={setOpen} />}
-        {role === "user" && <AddTicketFormUser setDialogOpen={setOpen} />}
+        {userSession?.user.role === "support" && <AddTicketForm setDialogOpen={setOpen} />}
+        {userSession?.user.role === "user" && <AddTicketFormUser setDialogOpen={setOpen} />}
       </DialogContent>
     </Dialog>
   );
