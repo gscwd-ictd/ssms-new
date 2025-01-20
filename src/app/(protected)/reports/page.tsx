@@ -14,5 +14,5 @@ export default async function Reports() {
     redirect("/tickets");
   }
 
-  return <>reports</>;
+  return <div>Reports</div>;
 }
