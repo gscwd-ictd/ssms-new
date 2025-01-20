@@ -168,10 +168,10 @@ export const AssignTicketBadgeDialog: FunctionComponent<AssignTicketBadgeDialogP
                           <CommandList>
                             <CommandEmpty>No user found.</CommandEmpty>
                             <CommandGroup>
-                              {supportStaff?.map((user) => (
+                              {supportStaff?.map((user, index) => (
                                 <CommandItem
                                   value={user.name}
-                                  key={user.id}
+                                  key={index}
                                   onSelect={() => {
                                     form.setValue("assignedId", user.id as string);
                                     setSelectedUserAvatar(user.image);

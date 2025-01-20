@@ -1,4 +1,4 @@
-import { addDays, startOfMonth } from "date-fns";
+import { addDays, startOfMonth, startOfYear } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -15,5 +15,15 @@ export const useDateFilter = create<DateFilterState>()(
       to: addDays(new Date(), +1),
     },
     setDateFilter: (dateRange) => set(() => ({ dateRange }), false, "set_date_filter"),
+  }))
+);
+
+export const useDashboardDateFilter = create<DateFilterState>()(
+  devtools((set) => ({
+    dateRange: {
+      from: startOfYear(new Date()),
+      to: addDays(new Date(), +1),
+    },
+    setDateFilter: (dateRange) => set(() => ({ dateRange }), false, "set_dashboard_date_filter"),
   }))
 );

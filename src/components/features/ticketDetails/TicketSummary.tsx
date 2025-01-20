@@ -56,7 +56,7 @@ export const TicketSummary: FunctionComponent = () => {
     defaultValues: {
       userId: userSession?.user.id,
       ticketId: param.id,
-      details: "",
+      details: undefined,
     },
   });
 
@@ -118,9 +118,8 @@ export const TicketSummary: FunctionComponent = () => {
     onError: () => alert("bad"),
   });
 
-  const onCommentSubmit = (data: z.infer<typeof CommentsSchema>) => {
-    mutate(data);
-    //console.log(data);
+  const onCommentSubmit = (data: Partial<z.infer<typeof CommentsSchema>>) => {
+    mutate(data as z.infer<typeof CommentsSchema>);
   };
 
   if (ticket) {
@@ -240,8 +239,8 @@ export const TicketSummary: FunctionComponent = () => {
 
           {comments !== undefined && comments.length > 0 && (
             <>
-              {comments.map((comment) => (
-                <div key={comment.id} className="mt-5">
+              {comments.map((comment, index) => (
+                <div key={index} className="mt-5">
                   <div className="flex items-center space-x-4">
                     <Avatar>
                       <AvatarImage src={comment.image!} className="object-cover" />
@@ -292,8 +291,14 @@ export const TicketSummary: FunctionComponent = () => {
                     )}
                   />
 
-                  <div className="flex justify-end mt-2">
-                    <Button type="submit">Comment</Button>
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      variant="secondary"
+                      type="submit"
+                      disabled={commentForm.getValues("details") === undefined}
+                    >
+                      Comment
+                    </Button>
                   </div>
                 </form>
               </Form>

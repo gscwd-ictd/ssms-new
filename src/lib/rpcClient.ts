@@ -1,5 +1,6 @@
 import { categoriesHandler } from "@ssms/server/handlers/categories";
 import { commentsHandler } from "@ssms/server/handlers/comments";
+import { dashboardHandler } from "@ssms/server/handlers/dashboard";
 import { departmentsHandler } from "@ssms/server/handlers/departments";
 import { divisionsHandler } from "@ssms/server/handlers/divisions";
 import { officesHandler } from "@ssms/server/handlers/offices";
@@ -26,3 +27,5 @@ export const $tickets = hc<typeof ticketsHandler>("/api/v1/tickets");
 export const $comments = hc<typeof commentsHandler>("/api/v1/comments");
 
 export const $users = hc<typeof usersHandler>("/api/v1/users");
+
+export const $dashboard = hc<typeof dashboardHandler>("/api/v1/dashboard");
