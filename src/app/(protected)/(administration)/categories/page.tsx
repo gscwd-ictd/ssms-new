@@ -1,7 +1,16 @@
 import { CategoriesTable } from "@ssms/components/features/dataTables/categories/CategoriesTable";
 import { Button } from "@ssms/components/ui/button";
+import { auth } from "@ssms/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function SubCategories() {
+export default async function SubCategories() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (session?.user.role !== "support") {
+    redirect("/tickets");
+  }
+
   return (
     <div className="flex flex-col">
       <header className="py-7 flex items-center justify-between">

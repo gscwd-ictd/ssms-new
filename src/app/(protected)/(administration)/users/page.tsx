@@ -1,6 +1,15 @@
 import { UsersDataTable } from "@ssms/components/features/dataTables/users/UsersDataTable";
+import { auth } from "@ssms/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Users() {
+export default async function Users() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (session?.user.role !== "support") {
+    redirect("/tickets");
+  }
+
   return (
     <div className="flex flex-col">
       <header className="py-7 flex items-center justify-between">

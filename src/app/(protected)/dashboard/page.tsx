@@ -3,13 +3,22 @@ import { MonthlyTicketLoad } from "@ssms/components/features/dashboardCards/Mont
 import { StatusCard } from "@ssms/components/features/dashboardCards/StatusCard";
 import { TicketAssignment } from "@ssms/components/features/dashboardCards/TicketAssignment";
 import { WeeklyTicketVolume } from "@ssms/components/features/dashboardCards/TicketVolume";
+import { auth } from "@ssms/lib/auth";
 import { Metadata } from "next";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Dashboard",
 };
 
 export default async function Dashboard() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (session?.user.role !== "support") {
+    redirect("/tickets");
+  }
+
   return (
     <div className="space-y-4 pb-7">
       <div className="pb-4 w-full flex items-center justify-between">
