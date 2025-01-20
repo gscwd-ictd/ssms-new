@@ -1,0 +1,1 @@
+ALTER TABLE "user" RENAME COLUMN "position_title" TO "position";

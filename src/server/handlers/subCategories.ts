@@ -1,7 +1,7 @@
 import { db } from "@ssms/lib/drizzle";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { subCategories } from "../db/schemas/tickets";
+import { categories, subCategories } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { SubCategoriesSchema } from "../validations/ticketsSchemas";
@@ -15,6 +15,29 @@ export const subCategoriesHandler = new Hono()
     } catch (error) {
       console.error(error);
       throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .get("misc/with-category-name", async (c) => {
+    try {
+      const stmt = db
+        .select({
+          id: subCategories.id,
+          name: subCategories.name,
+          category: categories.name,
+          description: subCategories.description,
+          createdAt: subCategories.createdAt,
+          updatedAt: subCategories.updatedAt,
+        })
+        .from(subCategories)
+        .innerJoin(categories, eq(categories.id, subCategories.categoryId))
+        .prepare("get_all_sub_categories_with_category_name");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
   .get("/:id", async (c) => {
@@ -36,7 +59,7 @@ export const subCategoriesHandler = new Hono()
       return c.json(res[0]);
     } catch (error) {
       console.error(error);
-      throw new HTTPException(401, { message: "Something went wrong!", cause: error });
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
   .post("/", zValidator("form", SubCategoriesSchema), async (c) => {

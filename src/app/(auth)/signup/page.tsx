@@ -236,6 +236,7 @@
 "use client";
 
 import { ErrorContext } from "@better-fetch/fetch";
+import { useUserSession } from "@ssms/components/stores/useUserSession";
 import { authClient } from "@ssms/lib/authCient";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -245,6 +246,8 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
+  const userSession = useUserSession((state) => state.userSession);
+
   const router = useRouter();
 
   const signUp = async () => {
@@ -253,17 +256,18 @@ export default function SignUp() {
         email,
         password,
         name,
-        office: "pzsdwopxfiorcowedcrhjqayejmf",
+        // office: "pzsdwopxfiorcowedcrhjqayejmf",
+        // position: "Data Encoder",
         // department: "uefglvaisbhybmilfobpcakhjlsv",
         // division: "qrmnqfgjvlwponqwtcxgzckgdgku",
 
-        // office: "iipxgganqfybvrdokclqprdmitdq",
+        office: "iipxgganqfybvrdokclqprdmitdq",
         // department: "vkvegmanffdwqkraguxlpxwfaxyc",
         // division: "cqgfqcfklheovjqcvqtujthfcpiz",
       },
       {
         onSuccess: async () => {
-          router.push("/dashboard");
+          router.push(userSession?.user.role === "user" ? "/tickets" : "/dashboard");
           router.refresh();
         },
         onError: (ctx: ErrorContext) => {

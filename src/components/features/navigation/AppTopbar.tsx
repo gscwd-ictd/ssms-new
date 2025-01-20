@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@ssms/components/ui/dropdown-menu";
 import { useUserSession } from "@ssms/components/stores/useUserSession";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@ssms/lib/authCient";
 import { useRouter } from "next/navigation";
 import { ThemeToggler } from "../theme/ThemeToggler";
@@ -31,6 +31,8 @@ import { ThemeToggler } from "../theme/ThemeToggler";
 export const AppTopbar: FunctionComponent = () => {
   const userSession = useUserSession((state) => state.userSession);
 
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const { mutate } = useMutation({
@@ -44,6 +46,9 @@ export const AppTopbar: FunctionComponent = () => {
         },
       });
       return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries();
     },
   });
 

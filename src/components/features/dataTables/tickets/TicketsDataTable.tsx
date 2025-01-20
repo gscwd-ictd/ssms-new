@@ -16,7 +16,7 @@ export const TicketsDataTable: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
 
   const { data: tickets, isPending: ticketsLoading } = useQuery({
-    queryKey: ["get-all-tickets", dateFilter?.from, dateFilter?.to],
+    queryKey: ["get-all-tickets", dateFilter?.from, dateFilter?.to, session?.user.id],
     queryFn: async () => {
       if (!session) return [];
 

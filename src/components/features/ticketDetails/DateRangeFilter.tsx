@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@ssms/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@ssms/components/ui/popover";
 import { cn } from "@ssms/lib/shadcn";

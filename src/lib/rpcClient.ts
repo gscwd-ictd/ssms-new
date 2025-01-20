@@ -4,8 +4,10 @@ import { dashboardHandler } from "@ssms/server/handlers/dashboard";
 import { departmentsHandler } from "@ssms/server/handlers/departments";
 import { divisionsHandler } from "@ssms/server/handlers/divisions";
 import { officesHandler } from "@ssms/server/handlers/offices";
+import { reportsHandler } from "@ssms/server/handlers/reports";
 import { subCategoriesHandler } from "@ssms/server/handlers/subCategories";
 import { supportTypesHandler } from "@ssms/server/handlers/supportTypes";
+import { teamsHandler } from "@ssms/server/handlers/teams";
 import { ticketsHandler } from "@ssms/server/handlers/tickets";
 import { usersHandler } from "@ssms/server/handlers/users";
 import { hc } from "hono/client";
@@ -29,3 +31,7 @@ export const $comments = hc<typeof commentsHandler>("/api/v1/comments");
 export const $users = hc<typeof usersHandler>("/api/v1/users");
 
 export const $dashboard = hc<typeof dashboardHandler>("/api/v1/dashboard");
+
+export const $reports = hc<typeof reportsHandler>("/api/v1/reports");
+
+export const $teams = hc<typeof teamsHandler>("/api/v1/teams");

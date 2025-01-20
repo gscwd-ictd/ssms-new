@@ -92,8 +92,8 @@ export const TicketAssignment: FunctionComponent = () => {
           {tickets?.length === 0 ? (
             <div className="h-[300px] flex items-center justify-center">
               <div className="flex items-center gap-2">
-                <Database className="h-10 w-10 text-muted" />
-                <h2 className="text-3xl font-bold text-muted">No Result.</h2>
+                <Database className="h-10 w-10 dark:text-muted text-muted-foreground" />
+                <h2 className="text-3xl font-bold dark:text-muted text-muted-foreground">No Result.</h2>
               </div>
             </div>
           ) : (

@@ -33,7 +33,7 @@ import Image from "next/image";
 import { cn } from "@ssms/lib/shadcn";
 import { toast } from "sonner";
 
-type UserList = {
+export type UserList = {
   id: string;
   name: string;
   image: string;

@@ -5,8 +5,10 @@ import { departmentsHandler } from "@ssms/server/handlers/departments";
 import { divisionsHandler } from "@ssms/server/handlers/divisions";
 import { healthcheckHandler } from "@ssms/server/handlers/healthcheck";
 import { officesHandler } from "@ssms/server/handlers/offices";
+import { reportsHandler } from "@ssms/server/handlers/reports";
 import { subCategoriesHandler } from "@ssms/server/handlers/subCategories";
 import { supportTypesHandler } from "@ssms/server/handlers/supportTypes";
+import { teamsHandler } from "@ssms/server/handlers/teams";
 import { ticketsHandler } from "@ssms/server/handlers/tickets";
 import { usersHandler } from "@ssms/server/handlers/users";
 import { Hono } from "hono";
@@ -26,7 +28,9 @@ const routes = app
   .route("/tickets", ticketsHandler)
   .route("/comments", commentsHandler)
   .route("/users", usersHandler)
-  .route("/dashboard", dashboardHandler);
+  .route("/dashboard", dashboardHandler)
+  .route("/reports", reportsHandler)
+  .route("/teams", teamsHandler);
 
 export const GET = handle(app);
 export const POST = handle(app);

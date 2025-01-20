@@ -71,6 +71,90 @@
       "when": 1736830590241,
       "tag": "0009_workable_pyro",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1737333852257,
+      "tag": "0010_legal_triathlon",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1737336306369,
+      "tag": "0011_wise_sinister_six",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1737336384503,
+      "tag": "0012_odd_northstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1737337151162,
+      "tag": "0013_optimal_katie_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1737337646144,
+      "tag": "0014_typical_preak",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1737337730748,
+      "tag": "0015_supreme_romulus",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1737359066598,
+      "tag": "0016_misty_the_hunter",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1737360261474,
+      "tag": "0017_stale_anthem",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1737361878849,
+      "tag": "0018_windy_network",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1737362040784,
+      "tag": "0019_flashy_deadpool",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1737362378194,
+      "tag": "0020_careful_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1737362681959,
+      "tag": "0021_real_sandman",
+      "breakpoints": true
     }
   ]
 }

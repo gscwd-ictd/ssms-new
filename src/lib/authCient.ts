@@ -12,6 +12,11 @@ export const authClient = createAuthClient({
           fieldName: "role",
           defaultValue: "user",
         },
+        position: {
+          required: false,
+          type: "string",
+          fieldName: "position",
+        },
         office: {
           required: true,
           type: "string",

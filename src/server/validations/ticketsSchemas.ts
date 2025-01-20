@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const CategoriesSchema = z.object({
-  name: z.string(),
+  name: z.string({ message: "Please indicate the category name" }),
   description: z.string().optional(),
 });
 
 export const SubCategoriesSchema = z.object({
   categoryId: z.string().min(28),
-  name: z.string(),
+  name: z.string().min(1, { message: "Please indicate the name of this sub-category" }),
   description: z.string().optional(),
 });
 

@@ -17,12 +17,14 @@ import { useQuery } from "@tanstack/react-query";
 import {
   FilePen,
   Folder,
+  FolderTree,
   Hammer,
   Printer,
   Settings,
   SquareDashedMousePointer,
   User,
   Users,
+  UserSearch,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
@@ -31,7 +33,26 @@ import Image from "next/image";
 import { useUserSession } from "@ssms/components/stores/useUserSession";
 import { UserInSession } from "../dataTables/tickets/AcceptTicketBadge";
 
-const mainItems = [
+const userItems = [
+  {
+    title: "Tickets",
+    url: "/tickets",
+    icon: FilePen,
+  },
+
+  {
+    title: "Profile",
+    url: "/profile",
+    icon: User,
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
+  },
+];
+
+const supportItems = [
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -63,12 +84,22 @@ const configItems = [
   {
     title: "Users",
     url: "/users",
+    icon: UserSearch,
+  },
+  {
+    title: "Teams",
+    url: "/teams",
     icon: Users,
   },
   {
     title: "Categories",
     url: "/categories",
     icon: Folder,
+  },
+  {
+    title: "Sub Categories",
+    url: "/sub-categories",
+    icon: FolderTree,
   },
   {
     title: "Support Types",
@@ -115,16 +146,27 @@ export const AppSidebar: FunctionComponent = () => {
           <SidebarGroupLabel className="uppercase font-semibold tracking-widest">General</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainItems.map((item, index) => (
-                <SidebarMenuItem key={index}>
-                  <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {session?.user.role === "support"
+                ? supportItems.map((item, index) => (
+                    <SidebarMenuItem key={index}>
+                      <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
+                        <Link href={item.url}>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))
+                : userItems.map((item, index) => (
+                    <SidebarMenuItem key={index}>
+                      <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
+                        <Link href={item.url}>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
