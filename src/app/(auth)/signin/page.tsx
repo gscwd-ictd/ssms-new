@@ -42,7 +42,8 @@ export default function SignInPage() {
           setPendingCredentials(true);
         },
         onSuccess: async () => {
-          router.push("/dashboard");
+          router.push("/");
+
           router.refresh();
         },
         onError: (ctx) => {

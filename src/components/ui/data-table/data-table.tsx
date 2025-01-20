@@ -132,8 +132,10 @@ export function DataTable<T>({
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
                       <div className="flex items-center w-full justify-center gap-2">
-                        <FileX2 className="text-muted h-7 w-7" />
-                        <span className="text-2xl font-extrabold text-muted tracking-wide">No Results</span>
+                        <FileX2 className="text-muted-foreground dark:text-muted h-7 w-7" />
+                        <span className="text-2xl font-extrabold text-muted-foreground dark:text-muted tracking-wide">
+                          No Results
+                        </span>
                       </div>
                     </TableCell>
                   </TableRow>
