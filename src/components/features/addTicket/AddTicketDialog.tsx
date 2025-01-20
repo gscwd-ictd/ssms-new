@@ -15,10 +15,6 @@ import { AddTicketFormUser } from "./AddTicketFormUser";
 import { FilePlus2 } from "lucide-react";
 import { useUserSession } from "@ssms/components/stores/useUserSession";
 
-// type AddTicketDialogProps = {
-//   role: "user" | "support" | null | undefined;
-// };
-
 export const AddTicketDialog: FunctionComponent = () => {
   const [open, setOpen] = useState(false);
 

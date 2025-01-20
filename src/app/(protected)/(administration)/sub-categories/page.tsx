@@ -1,12 +1,12 @@
-import { AddCategoryFormDialog } from "@ssms/components/features/categories/AddCategoryFormDialog";
-import { CategoriesTable } from "@ssms/components/features/dataTables/categories/CategoriesTable";
+import { SubCategoriesTable } from "@ssms/components/features/dataTables/sub-categories/SubCategoriesTable";
+import { AddSubCategoryFormDialog } from "@ssms/components/features/subCategories/AddSubCategoryFormDialog";
 import { auth } from "@ssms/lib/auth";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Categories",
+  title: "Sub-Categories",
 };
 
 export default async function SubCategories() {
@@ -19,12 +19,12 @@ export default async function SubCategories() {
   return (
     <div className="flex flex-col">
       <header className="py-7 flex items-center justify-between">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">Categories</h1>
-        <AddCategoryFormDialog />
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">Sub Categories</h1>
+        <AddSubCategoryFormDialog />
       </header>
 
       <main>
-        <CategoriesTable />
+        <SubCategoriesTable />
       </main>
     </div>
   );

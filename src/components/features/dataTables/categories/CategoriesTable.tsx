@@ -10,7 +10,7 @@ export const CategoriesTable: FunctionComponent = () => {
   const { data: categories } = useQuery({
     queryKey: ["get-all-categories"],
     queryFn: async () => {
-      const res = await $categories.misc.pair.$get();
+      const res = await $categories.index.$get();
 
       const categories = await res.json();
 

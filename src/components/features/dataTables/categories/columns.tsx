@@ -1,30 +1,20 @@
 import { Badge } from "@ssms/components/ui/badge";
 import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table-column-header";
-import { subCategories } from "@ssms/server/db/schemas/tickets";
+import { categories } from "@ssms/server/db/schemas/tickets";
 import { ColumnDef } from "@tanstack/react-table";
 import { format, formatDistanceToNow } from "date-fns";
+import { CategoriesRowActions } from "./CategoriesRowActions";
 
-type MutatedSubCategories = Omit<
-  typeof subCategories.$inferSelect,
-  "name" | "categoryId" | "createdAt" | "updatedAt"
-> & {
-  subCategory: string;
-  category: string;
+type MutatedCategories = Omit<typeof categories.$inferSelect, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string | null;
 };
 
-export const categoriesColumns: ColumnDef<MutatedSubCategories>[] = [
+export const categoriesColumns: ColumnDef<MutatedCategories>[] = [
   {
     accessorKey: "category",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
-    cell: ({ row }) => <div>{row.getValue("category")}</div>,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "subCategory",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Sub Category" />,
-    cell: ({ row }) => <div>{row.getValue("subCategory")}</div>,
+    cell: ({ row }) => <div>{row.original.name}</div>,
     enableHiding: false,
   },
   {
@@ -52,5 +42,9 @@ export const categoriesColumns: ColumnDef<MutatedSubCategories>[] = [
     enableSorting: true,
     enableHiding: false,
     enableColumnFilter: false,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <CategoriesRowActions categoryId={row.original.id} />,
   },
 ];

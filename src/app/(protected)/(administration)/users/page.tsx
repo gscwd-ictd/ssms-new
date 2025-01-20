@@ -1,7 +1,12 @@
 import { UsersDataTable } from "@ssms/components/features/dataTables/users/UsersDataTable";
 import { auth } from "@ssms/lib/auth";
+import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Users",
+};
 
 export default async function Users() {
   const session = await auth.api.getSession({ headers: await headers() });

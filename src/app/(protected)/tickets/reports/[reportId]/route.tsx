@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const MonthlyTicketSummaryPDF: FunctionComponent<MonthlyTicketSummaryProps> = ({ tickets }) => {
+const MonthlyTicketSummaryPDF: FunctionComponent<MonthlyTicketSummaryProps> = ({ tickets }) => {
   const totalRequests = tickets.length;
   const totalAccomplished = tickets.filter((ticket) => ticket.status === "resolved").length;
 

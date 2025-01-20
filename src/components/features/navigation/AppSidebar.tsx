@@ -17,12 +17,14 @@ import { useQuery } from "@tanstack/react-query";
 import {
   FilePen,
   Folder,
+  FolderTree,
   Hammer,
   Printer,
   Settings,
   SquareDashedMousePointer,
   User,
   Users,
+  UserSearch,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
@@ -82,12 +84,22 @@ const configItems = [
   {
     title: "Users",
     url: "/users",
+    icon: UserSearch,
+  },
+  {
+    title: "Teams",
+    url: "/teams",
     icon: Users,
   },
   {
     title: "Categories",
     url: "/categories",
     icon: Folder,
+  },
+  {
+    title: "Sub Categories",
+    url: "/sub-categories",
+    icon: FolderTree,
   },
   {
     title: "Support Types",
