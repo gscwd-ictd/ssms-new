@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 import { format } from "date-fns";
 import fs from "fs";
 import path from "path";
+import { FunctionComponent } from "react";
 
 const styles = StyleSheet.create({
   header: {
@@ -57,10 +58,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: "center",
     marginTop: 2,
+    textTransform: "uppercase",
   },
 });
 
-const DocumentHeader = () => {
+type DocumentHeaderProps = {
+  teamName: string;
+};
+
+const DocumentHeader: FunctionComponent<DocumentHeaderProps> = ({ teamName }) => {
   const logoPath = path.join(process.cwd(), "public", "gscwd_logo.png");
   const logoBase64 = fs.readFileSync(logoPath, { encoding: "base64" });
   const logoSrc = `data:image/png;base64,${logoBase64}`;
@@ -82,7 +88,7 @@ const DocumentHeader = () => {
       </View>
 
       <Text style={styles.title}>SERVICE SLIP SUMMARY</Text>
-      <Text style={styles.subtitle}>HARDWARE SUPPORT</Text>
+      <Text style={styles.subtitle}>{teamName}</Text>
       <Text style={styles.subtitle}>
         FOR THE MONTH OF {format(new Date(), "MMMM").toUpperCase()}, {format(new Date(), "yyy")}
       </Text>

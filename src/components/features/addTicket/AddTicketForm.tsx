@@ -32,9 +32,10 @@ import { addDays, startOfMonth } from "date-fns";
 
 type AddTicketFormProps = {
   setDialogOpen: (open: boolean) => void;
+  dialogOpen: boolean;
 };
 
-export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialogOpen }) => {
+export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialogOpen, dialogOpen }) => {
   const [selectedUserAvatar, setSelectedUserAvatar] = useState<string | null>(null);
   const [userListOpen, setUserListOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -70,6 +71,7 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
 
       return supportTypes;
     },
+    enabled: dialogOpen === true,
   });
 
   const { data: userList, isPending: userListLoading } = useQuery({
@@ -85,6 +87,7 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
 
       return userList;
     },
+    enabled: dialogOpen === true,
   });
 
   const { data: categories } = useQuery({
@@ -100,6 +103,7 @@ export const AddTicketForm: FunctionComponent<AddTicketFormProps> = ({ setDialog
 
       return categories;
     },
+    enabled: dialogOpen === true,
   });
 
   const { data: subCategories } = useQuery({

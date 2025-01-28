@@ -5,6 +5,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format, formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
 import { AssignedUsers } from "./AssignedUsers";
+import { TeamsRowActions } from "./TeamsRowActions";
+import { AssignedCategories } from "./AssignedCategories";
 
 type TeamsColumn = {
   id: string;
@@ -25,13 +27,25 @@ export const useTeamsColumns = (data: TeamsColumn[] | undefined) => {
         enableHiding: false,
         enableColumnFilter: false,
       },
+
       {
         accessorKey: "id",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Assigned Users" />,
         cell: ({ row }) => <AssignedUsers teamId={row.original.id} />,
         enableHiding: false,
         enableColumnFilter: false,
+        enableSorting: false,
       },
+
+      {
+        accessorKey: "assigned_categories",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Categories" />,
+        cell: ({ row }) => <AssignedCategories teamId={row.original.id} />,
+        enableHiding: false,
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+
       {
         accessorKey: "createdAt",
         accessorFn: (row) => <>{format(row.createdAt, "EEEE, MMMM d, yyyy")}</>,
@@ -51,6 +65,10 @@ export const useTeamsColumns = (data: TeamsColumn[] | undefined) => {
         enableSorting: true,
         enableHiding: false,
         enableColumnFilter: false,
+      },
+      {
+        id: "actions",
+        cell: ({ row }) => <TeamsRowActions teamId={row.original.id} />,
       },
     ];
 

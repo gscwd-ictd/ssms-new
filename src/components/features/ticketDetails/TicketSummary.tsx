@@ -56,7 +56,7 @@ export const TicketSummary: FunctionComponent = () => {
     defaultValues: {
       userId: userSession?.user.id,
       ticketId: param.id,
-      details: undefined,
+      details: "",
     },
   });
 
@@ -98,7 +98,7 @@ export const TicketSummary: FunctionComponent = () => {
     },
   });
 
-  const { mutate } = useMutation({
+  const { mutate: addComment } = useMutation({
     mutationKey: ["add-comment"],
     mutationFn: async (data: z.infer<typeof CommentsSchema>) => {
       const res = await $comments.index.$post({ form: data });
@@ -119,12 +119,12 @@ export const TicketSummary: FunctionComponent = () => {
   });
 
   const onCommentSubmit = (data: Partial<z.infer<typeof CommentsSchema>>) => {
-    mutate(data as z.infer<typeof CommentsSchema>);
+    addComment(data as z.infer<typeof CommentsSchema>);
   };
 
   if (ticket) {
     return (
-      <Card>
+      <Card className="mb-7">
         <CardHeader className="space-y-7">
           <div className="flex items-start justify-between">
             <div className="space-y-2">
@@ -295,7 +295,7 @@ export const TicketSummary: FunctionComponent = () => {
                     <Button
                       variant="secondary"
                       type="submit"
-                      disabled={commentForm.getValues("details") === undefined}
+                      disabled={commentForm.getValues("details") === ""}
                     >
                       Comment
                     </Button>
@@ -305,6 +305,8 @@ export const TicketSummary: FunctionComponent = () => {
             </div>
           </div>
         </CardContent>
+
+        <Separator />
 
         <CardFooter>
           <span className="text-muted-foreground mt-5 flex items-center gap-1">

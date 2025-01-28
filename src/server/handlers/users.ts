@@ -4,6 +4,8 @@ import { HTTPException } from "hono/http-exception";
 import { user } from "../db/schemas/auth";
 import { aliasedTable, eq } from "drizzle-orm";
 import { department, division, office } from "../db/schemas/org";
+import { z } from "zod";
+import { importUsersFromLocalCSV } from "../utils/csv/importUsers";
 
 export const usersHandler = new Hono()
   .get("/", async (c) => {
@@ -77,6 +79,27 @@ export const usersHandler = new Hono()
         return c.json(res);
       }
     } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .post("bulk-add", async (c) => {
+    try {
+      const result = await importUsersFromLocalCSV();
+
+      return c.json(result);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return c.json({
+          success: false,
+          message: "Invalid request format",
+          errors: error.errors.map((e) => ({
+            row: 0,
+            message: e.message,
+          })),
+        });
+      }
+
       console.error(error);
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }

@@ -22,7 +22,7 @@ import { TeamAssignmentSchema } from "@ssms/server/validations/teamSchemas";
 import { teamAssignments } from "@ssms/server/db/schemas/teams";
 import { toast } from "sonner";
 
-type SelectOption = {
+export type SelectOption = {
   label: string;
   value: string;
 };
@@ -37,6 +37,7 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
     defaultValues: {
       name: "",
       users: [],
+      categories: [],
     },
   });
 
@@ -61,6 +62,27 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
     enabled: open === true,
   });
 
+  const { data: unassignedCategories } = useQuery({
+    queryKey: ["get-all-unassigned-categories"],
+    queryFn: async () => {
+      const res = await $teams["unassigned-categories"].$get();
+
+      const unassignedCategories = await res.json();
+
+      if (!res.ok) {
+        throw unassignedCategories;
+      }
+
+      const transformedData: SelectOption[] = unassignedCategories.map((user) => ({
+        label: user.name,
+        value: user.id,
+      }));
+
+      return transformedData;
+    },
+    enabled: open === true,
+  });
+
   const { mutate: createTeamAssignment } = useMutation({
     mutationKey: ["create-team-assignment"],
     mutationFn: async (data: z.infer<typeof TeamAssignmentSchema>) => {
@@ -75,7 +97,7 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
       return teamAssignments;
     },
     onSuccess: () => {
-      toast.success("Successfully create a new team assignment!");
+      toast.success("Successfully created a new team assignment!");
       setOpen(false);
       form.reset();
       queryClient.invalidateQueries({
@@ -133,6 +155,26 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       placeholder="Select technical support staff"
+                      variant="secondary"
+                      maxCount={3}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="categories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categories</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={unassignedCategories ?? []}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Assign categories for this team"
                       variant="secondary"
                       maxCount={3}
                     />

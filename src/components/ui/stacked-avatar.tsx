@@ -28,7 +28,7 @@ export const StackedAvatars: FunctionComponent<StackedAvatarsProps> = ({ users, 
     },
     md: {
       avatar: "h-8 w-8",
-      overlap: "-ml-3",
+      overlap: "-ml-1",
       text: "text-sm",
       container: "space-x-[-12px]",
     },
@@ -54,7 +54,7 @@ export const StackedAvatars: FunctionComponent<StackedAvatarsProps> = ({ users, 
                     index !== 0 ? styles.overlap : ""
                   } ring-2 ring-background cursor-pointer`}
                 >
-                  <AvatarImage src={user.image ?? undefined} alt={user.name} />
+                  <AvatarImage src={user.image ?? undefined} alt={user.name} className="object-cover" />
                   <AvatarFallback className={styles.text}>{user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
               </TooltipTrigger>

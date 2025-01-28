@@ -19,7 +19,6 @@ import {
   Folder,
   FolderTree,
   Hammer,
-  Printer,
   Settings,
   SquareDashedMousePointer,
   User,
@@ -40,16 +39,16 @@ const userItems = [
     icon: FilePen,
   },
 
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: User,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Profile",
+  //   url: "/profile",
+  //   icon: User,
+  // },
+  // {
+  //   title: "Settings",
+  //   url: "/settings",
+  //   icon: Settings,
+  // },
 ];
 
 const supportItems = [
@@ -63,21 +62,16 @@ const supportItems = [
     url: "/tickets",
     icon: FilePen,
   },
-  {
-    title: "Reports",
-    url: "/reports",
-    icon: Printer,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: User,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Profile",
+  //   url: "/profile",
+  //   icon: User,
+  // },
+  // {
+  //   title: "Settings",
+  //   url: "/settings",
+  //   icon: Settings,
+  // },
 ];
 
 const configItems = [

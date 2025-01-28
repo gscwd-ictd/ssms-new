@@ -7,19 +7,17 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@ssms/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { AddMemberDialog } from "../../teams/AddMemberDialog";
+import { AddTeamCategoryDialog } from "../../teams/AddTeamCategoryDialog";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 
-type TicketsRowActionsProps = {
-  ticketId: string;
+type TeamsRowActionsProps = {
+  teamId: string;
 };
 
-export const TicketsRowActions: FunctionComponent<TicketsRowActionsProps> = ({ ticketId }) => {
-  const router = useRouter();
-
+export const TeamsRowActions: FunctionComponent<TeamsRowActionsProps> = ({ teamId }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,15 +27,15 @@ export const TicketsRowActions: FunctionComponent<TicketsRowActionsProps> = ({ t
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => router.push(`/tickets/${ticketId}`)}>View Details</DropdownMenuItem>
-        {/* <DropdownMenuItem>Assign Ticket</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <AddMemberDialog teamId={teamId} />
+        </DropdownMenuItem>
+
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem> */}
+        <DropdownMenuItem asChild>
+          <AddTeamCategoryDialog teamId={teamId} />
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
