@@ -137,6 +137,27 @@ export const teamsHandler = new Hono()
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
+  .get("/assigned-categories/:id", async (c) => {
+    const teamId = c.req.param("id");
+
+    try {
+      const stmt = db
+        .select({
+          name: categories.name,
+        })
+        .from(categoryAssignments)
+        .innerJoin(categories, eq(categories.id, categoryAssignments.categoryId))
+        .where(eq(categoryAssignments.teamId, teamId))
+        .prepare("get_assigned_categories");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
   .post("/team-assignments", zValidator("form", TeamAssignmentSchema), async (c) => {
     const body = c.req.valid("form");
 
@@ -211,7 +232,7 @@ export const teamsHandler = new Hono()
           return await tx
             .insert(categoryAssignments)
             .values({ teamId, categoryId: category })
-            .returning({ userId: teamAssignments.userId });
+            .returning({ id: teamAssignments.id });
         });
 
         return newMembers[0];

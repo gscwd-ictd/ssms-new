@@ -38,7 +38,7 @@ export const AddTeamCategoryDialog: FunctionComponent<AddTeamCategoryProps> = ({
   });
 
   const { mutate: addCategory } = useMutation({
-    mutationKey: ["add-member"],
+    mutationKey: ["add-category"],
     mutationFn: async (data: z.infer<typeof AddCategorySchema>) => {
       const res = await $teams["add-categories"][":id"].$post({
         form: data,

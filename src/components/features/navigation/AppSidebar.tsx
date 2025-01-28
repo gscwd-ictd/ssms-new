@@ -39,16 +39,16 @@ const userItems = [
     icon: FilePen,
   },
 
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: User,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Profile",
+  //   url: "/profile",
+  //   icon: User,
+  // },
+  // {
+  //   title: "Settings",
+  //   url: "/settings",
+  //   icon: Settings,
+  // },
 ];
 
 const supportItems = [
