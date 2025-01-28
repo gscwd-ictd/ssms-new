@@ -66,7 +66,7 @@ export const AddSupportTypesFormDialog: FunctionComponent = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary" onClick={() => setOpen(true)}>
-          <span>Add Category</span>
+          <span>Create New</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
