@@ -11,7 +11,7 @@ import {
 } from "@ssms/components/ui/dropdown-menu";
 import { AddMemberDialog } from "../../teams/AddMemberDialog";
 import { AddTeamCategoryDialog } from "../../teams/AddTeamCategoryDialog";
-import { Separator } from "@ssms/components/ui/separator";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 
 type TeamsRowActionsProps = {
   teamId: string;
@@ -31,7 +31,7 @@ export const TeamsRowActions: FunctionComponent<TeamsRowActionsProps> = ({ teamI
           <AddMemberDialog teamId={teamId} />
         </DropdownMenuItem>
 
-        <Separator />
+        <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
           <AddTeamCategoryDialog teamId={teamId} />
