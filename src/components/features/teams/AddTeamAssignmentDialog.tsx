@@ -37,6 +37,7 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
     defaultValues: {
       name: "",
       users: [],
+      categories: [],
     },
   });
 
@@ -52,6 +53,27 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
       }
 
       const transformedData: SelectOption[] = unassignedUsers.map((user) => ({
+        label: user.name,
+        value: user.id,
+      }));
+
+      return transformedData;
+    },
+    enabled: open === true,
+  });
+
+  const { data: unassignedCategories } = useQuery({
+    queryKey: ["get-all-unassigned-categories"],
+    queryFn: async () => {
+      const res = await $teams["unassigned-categories"].$get();
+
+      const unassignedCategories = await res.json();
+
+      if (!res.ok) {
+        throw unassignedCategories;
+      }
+
+      const transformedData: SelectOption[] = unassignedCategories.map((user) => ({
         label: user.name,
         value: user.id,
       }));
@@ -133,6 +155,26 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       placeholder="Select technical support staff"
+                      variant="secondary"
+                      maxCount={3}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="categories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categories</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={unassignedCategories ?? []}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Assign categories for this team"
                       variant="secondary"
                       maxCount={3}
                     />

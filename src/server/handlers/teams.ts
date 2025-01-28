@@ -3,9 +3,10 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { AddMemberSchema, TeamAssignmentSchema } from "../validations/teamSchemas";
 import { db } from "@ssms/lib/drizzle";
-import { teamAssignments, teams } from "../db/schemas/teams";
+import { categoryAssignments, teamAssignments, teams } from "../db/schemas/teams";
 import { eq, and, isNull } from "drizzle-orm";
 import { user } from "../db/schemas/auth";
+import { categories } from "../db/schemas/tickets";
 
 export const teamsHandler = new Hono()
   .get("/", async (c) => {
@@ -93,6 +94,27 @@ export const teamsHandler = new Hono()
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
+  .get("/unassigned-categories", async (c) => {
+    try {
+      const stmt = db
+        .select({
+          id: categories.id,
+          name: categories.name,
+        })
+        .from(categories)
+        .leftJoin(categoryAssignments, eq(categories.id, categoryAssignments.categoryId))
+        .where(isNull(categoryAssignments.id))
+        .orderBy(categories.name)
+        .prepare("get_all_unassigned_categories");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
   .post("/team-assignments", zValidator("form", TeamAssignmentSchema), async (c) => {
     const body = c.req.valid("form");
 
@@ -108,6 +130,13 @@ export const teamsHandler = new Hono()
             .insert(teamAssignments)
             .values({ userId: id, teamId: newTeam[0].id })
             .returning({ userId: teamAssignments.userId });
+        });
+
+        body.categories.map(async (id) => {
+          return await tx
+            .insert(categoryAssignments)
+            .values({ categoryId: id, teamId: newTeam[0].id })
+            .returning({ id: categoryAssignments.id });
         });
 
         return newTeam[0];
