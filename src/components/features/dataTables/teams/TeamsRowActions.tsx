@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@ssms/components/ui/dropdown-menu";
 import { AddMemberDialog } from "../../teams/AddMemberDialog";
+import { AddTeamCategoryDialog } from "../../teams/AddTeamCategoryDialog";
+import { Separator } from "@ssms/components/ui/separator";
 
 type TeamsRowActionsProps = {
   teamId: string;
@@ -27,6 +29,12 @@ export const TeamsRowActions: FunctionComponent<TeamsRowActionsProps> = ({ teamI
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem asChild>
           <AddMemberDialog teamId={teamId} />
+        </DropdownMenuItem>
+
+        <Separator />
+
+        <DropdownMenuItem asChild>
+          <AddTeamCategoryDialog teamId={teamId} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

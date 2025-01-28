@@ -19,7 +19,6 @@ import {
   Folder,
   FolderTree,
   Hammer,
-  Printer,
   Settings,
   SquareDashedMousePointer,
   User,
@@ -62,11 +61,6 @@ const supportItems = [
     title: "Tickets",
     url: "/tickets",
     icon: FilePen,
-  },
-  {
-    title: "Reports",
-    url: "/reports",
-    icon: Printer,
   },
   {
     title: "Profile",

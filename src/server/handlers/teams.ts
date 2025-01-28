@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { AddMemberSchema, TeamAssignmentSchema } from "../validations/teamSchemas";
+import { AddCategorySchema, AddMemberSchema, TeamAssignmentSchema } from "../validations/teamSchemas";
 import { db } from "@ssms/lib/drizzle";
 import { categoryAssignments, teamAssignments, teams } from "../db/schemas/teams";
 import { eq, and, isNull } from "drizzle-orm";
@@ -115,6 +115,28 @@ export const teamsHandler = new Hono()
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
   })
+  .get("/assigned-team-name/:id", async (c) => {
+    const userId = c.req.param("id");
+
+    try {
+      const stmt = db
+        .select({
+          teamName: teams.name,
+        })
+        .from(teamAssignments)
+        .innerJoin(teams, eq(teams.id, teamAssignments.teamId))
+        .innerJoin(user, eq(user.id, teamAssignments.userId))
+        .where(eq(user.id, userId))
+        .prepare("get_assigned_team_name");
+
+      const res = await stmt.execute();
+
+      return c.json(res[0]);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
   .post("/team-assignments", zValidator("form", TeamAssignmentSchema), async (c) => {
     const body = c.req.valid("form");
 
@@ -167,6 +189,28 @@ export const teamsHandler = new Hono()
           return await tx
             .insert(teamAssignments)
             .values({ teamId, userId: user })
+            .returning({ userId: teamAssignments.userId });
+        });
+
+        return newMembers[0];
+      });
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
+  .post("add-categories/:id", zValidator("form", AddCategorySchema), async (c) => {
+    const body = c.req.valid("form");
+    const teamId = c.req.param("id");
+
+    try {
+      const res = await db.transaction(async (tx) => {
+        const newMembers = body.categories.map(async (category) => {
+          return await tx
+            .insert(categoryAssignments)
+            .values({ teamId, categoryId: category })
             .returning({ userId: teamAssignments.userId });
         });
 

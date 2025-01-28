@@ -28,7 +28,7 @@ export const StackedAvatars: FunctionComponent<StackedAvatarsProps> = ({ users, 
     },
     md: {
       avatar: "h-8 w-8",
-      overlap: "-ml-3",
+      overlap: "-ml-1",
       text: "text-sm",
       container: "space-x-[-12px]",
     },

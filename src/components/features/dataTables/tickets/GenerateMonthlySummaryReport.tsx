@@ -13,7 +13,7 @@ export const GenerateMonthlySummaryReport: FunctionComponent = () => {
 
   if (userSession?.user.role === "support") {
     return (
-      <Button variant="secondary" onClick={() => router.push("/tickets/reports/pdf")}>
+      <Button variant="secondary" onClick={() => router.push(`/tickets/reports/${userSession.user.id}`)}>
         <PrinterCheck className="text-indigo-500" />
         <span>Print Report</span>
       </Button>

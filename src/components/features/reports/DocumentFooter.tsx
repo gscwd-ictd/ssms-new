@@ -42,21 +42,27 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "bold",
     textAlign: "center",
+    textTransform: "uppercase",
   },
   signatureTitle: {
     fontSize: 10,
     textAlign: "center",
+    textTransform: "uppercase",
   },
 });
 
 interface DocumentFooterProps {
   receivedRequests: number;
   accomplishedRequests: number;
+  supportStaff: string;
+  position: string;
 }
 
 export const DocumentFooter: FunctionComponent<DocumentFooterProps> = ({
   receivedRequests,
   accomplishedRequests,
+  supportStaff,
+  position,
 }) => (
   <View style={styles.footer}>
     <View style={styles.totalsSection}>
@@ -74,8 +80,8 @@ export const DocumentFooter: FunctionComponent<DocumentFooterProps> = ({
     <View style={styles.signatureSection}>
       <View style={styles.signatureBlock}>
         <View style={styles.signatureLine} />
-        <Text style={styles.signatureName}>Phyl Fragata</Text>
-        <Text style={styles.signatureTitle}>SOET-B</Text>
+        <Text style={styles.signatureName}>{supportStaff}</Text>
+        <Text style={styles.signatureTitle}>{position}</Text>
       </View>
 
       <View style={styles.signatureBlock}>
