@@ -9,36 +9,69 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@ssms/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ssms/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@ssms/components/ui/form";
 import { Button } from "../../ui/button";
-import { Input } from "@ssms/components/ui/input";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { $teams } from "@ssms/lib/rpcClient";
-import { MultiSelect } from "@ssms/components/ui/multi-select";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TeamAssignmentSchema } from "@ssms/server/validations/teamSchemas";
-import { teamAssignments } from "@ssms/server/db/schemas/teams";
+import { AddMemberSchema } from "@ssms/server/validations/teamSchemas";
+import { MultiSelect } from "@ssms/components/ui/multi-select";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { $teams } from "@ssms/lib/rpcClient";
+import { SelectOption } from "./AddTeamAssignmentDialog";
 import { toast } from "sonner";
 
-export type SelectOption = {
-  label: string;
-  value: string;
+type AddMemberProps = {
+  teamId: string;
 };
 
-export const AddTeamAssignmentDialog: FunctionComponent = () => {
+export const AddMemberDialog: FunctionComponent<AddMemberProps> = ({ teamId }) => {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const form = useForm<z.infer<typeof TeamAssignmentSchema>>({
-    resolver: zodResolver(TeamAssignmentSchema),
+  const form = useForm<z.infer<typeof AddMemberSchema>>({
+    resolver: zodResolver(AddMemberSchema),
     defaultValues: {
-      name: "",
       users: [],
     },
   });
+
+  const { mutate: addMember } = useMutation({
+    mutationKey: ["add-member"],
+    mutationFn: async (data: z.infer<typeof AddMemberSchema>) => {
+      const res = await $teams["add-member"][":id"].$post({
+        form: data,
+        param: {
+          id: teamId,
+        },
+      });
+
+      const newMembers = await res.json();
+
+      if (!res.ok) {
+        throw newMembers;
+      }
+
+      return newMembers;
+    },
+    onSuccess: () => {
+      toast.success("Successfully added a new member!");
+      setOpen(false);
+      form.reset();
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-teams", "get-assigned-users-by-team-id"],
+      });
+    },
+    onError: (err) => {
+      alert(err.message);
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof AddMemberSchema>) => {
+    //console.log(data);
+    addMember(data);
+  };
 
   const { data: unassignedUsers } = useQuery({
     queryKey: ["get-all-unassigned-users"],
@@ -61,66 +94,45 @@ export const AddTeamAssignmentDialog: FunctionComponent = () => {
     enabled: open === true,
   });
 
-  const { mutate: createTeamAssignment } = useMutation({
-    mutationKey: ["create-team-assignment"],
-    mutationFn: async (data: z.infer<typeof TeamAssignmentSchema>) => {
-      const res = await $teams["team-assignments"].$post({ form: data });
+  const { data: team } = useQuery({
+    queryKey: ["get-team-by-id"],
+    queryFn: async () => {
+      const res = await $teams.info[":id"].$get({
+        param: {
+          id: teamId,
+        },
+      });
 
-      const newTeamAssignment = await res.json();
+      const team = await res.json();
 
       if (!res.ok) {
-        throw newTeamAssignment;
+        throw team;
       }
 
-      return teamAssignments;
+      return team;
     },
-    onSuccess: () => {
-      toast.success("Successfully created a new team assignment!");
-      setOpen(false);
-      form.reset();
-      queryClient.invalidateQueries({
-        queryKey: ["get-all-teams"],
-      });
-    },
-    onError: (err) => {
-      alert(err.message);
-    },
+    enabled: open === true,
   });
-
-  const onSubmit = (data: z.infer<typeof TeamAssignmentSchema>) => {
-    createTeamAssignment(data);
-    console.log(data);
-  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" onClick={() => setOpen(true)}>
-          <span>Add Team</span>
-        </Button>
+      <DialogTrigger
+        onClick={() => setOpen(true)}
+        className="cursor-default relative flex hover:bg-secondary w-full select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+        asChild
+      >
+        <button>Add Member</button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Team Assignment</DialogTitle>
-          <DialogDescription>Assign technical support staff to a specific team</DialogDescription>
+          <DialogTitle>Add Member/s</DialogTitle>
+          <DialogDescription>
+            Assign technical support staff to <strong className="text-indigo-500">{team?.name}</strong> team
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Team name..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="users"

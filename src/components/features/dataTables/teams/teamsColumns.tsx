@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format, formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
 import { AssignedUsers } from "./AssignedUsers";
+import { TeamsRowActions } from "./TeamsRowActions";
 
 type TeamsColumn = {
   id: string;
@@ -51,6 +52,10 @@ export const useTeamsColumns = (data: TeamsColumn[] | undefined) => {
         enableSorting: true,
         enableHiding: false,
         enableColumnFilter: false,
+      },
+      {
+        id: "actions",
+        cell: ({ row }) => <TeamsRowActions teamId={row.original.id} />,
       },
     ];
 

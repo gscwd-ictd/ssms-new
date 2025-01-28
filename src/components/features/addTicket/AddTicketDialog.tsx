@@ -33,7 +33,7 @@ export const AddTicketDialog: FunctionComponent = () => {
           <DialogTitle>Add ticket</DialogTitle>
           <DialogDescription>Create a ticket for any IT related issues</DialogDescription>
         </DialogHeader>
-        {userSession?.user.role === "support" && <AddTicketForm setDialogOpen={setOpen} />}
+        {userSession?.user.role === "support" && <AddTicketForm setDialogOpen={setOpen} dialogOpen={open} />}
         {userSession?.user.role === "user" && <AddTicketFormUser setDialogOpen={setOpen} />}
       </DialogContent>
     </Dialog>
