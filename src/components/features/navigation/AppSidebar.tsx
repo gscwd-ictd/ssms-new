@@ -19,9 +19,7 @@ import {
   Folder,
   FolderTree,
   Hammer,
-  Settings,
   SquareDashedMousePointer,
-  User,
   Users,
   UserSearch,
 } from "lucide-react";

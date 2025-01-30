@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ssms
+    ports:
+      - "5435:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  web:
+    container_name: ssms
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - BETTER_AUTH_URL=http://localhost:3000
+      - BETTER_AUTH_SECRET=9309a05d754022b31600332cfd9fde5885e470eb43572ba89cca58e0a68ada97
+      - DATABASE_URL=postgres://admin:password@db:5435/ssms
+
+volumes:
+  data:

@@ -4,7 +4,7 @@ import { Button } from "@ssms/components/ui/button";
 import { Input } from "@ssms/components/ui/input";
 import { Label } from "@ssms/components/ui/label";
 import { Switch } from "@ssms/components/ui/switch";
-import { Upload, ExternalLink } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@ssms/components/ui/avatar";
 
 const CompanySettings = () => {
