@@ -39,6 +39,9 @@ export const tickets = pgTable("tickets", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => generateRandomString(28, "a-z", "A-Z", "0-9")),
+  ticketNo: text("ticket_no")
+    .unique()
+    .$defaultFn(() => `ICTD-${Date.now()}`),
   requestorId: text("requestor_id").references(() => user.id),
   assignedId: text("assigned_id").references(() => user.id),
   categoryId: text("category_id").references(() => categories.id),

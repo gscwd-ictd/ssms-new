@@ -155,6 +155,13 @@
       "when": 1737362681959,
       "tag": "0021_real_sandman",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1738298801890,
+      "tag": "0022_right_retro_girl",
+      "breakpoints": true
     }
   ]
 }

@@ -22,6 +22,7 @@ import { useUserSession } from "@ssms/components/stores/useUserSession";
 import { ResolveTicketDialog } from "../resolveTicket/ResolveTicketDialog";
 import { CancelTicketFormDialog } from "../cancelTicket/CancelTicketFormDialog";
 import { AcceptTicketBadge } from "../dataTables/tickets/AcceptTicketBadge";
+import { PrintTicket } from "./PrintTicket";
 
 export type TicketDetails = {
   id: string;
@@ -143,7 +144,7 @@ export const TicketSummary: FunctionComponent = () => {
                 {ticket.status}
               </Badge>
 
-              <h1 className="scroll-m-20 text-4xl font-medium tracking-wide mb-2 max-w-[50rem] line-clamp-2">
+              <h1 className="scroll-m-20 text-3xl font-medium tracking-wide mb-2 max-w-[50rem]">
                 {ticket.details}
               </h1>
 
@@ -220,7 +221,9 @@ export const TicketSummary: FunctionComponent = () => {
               {/* <Button variant="outline" disabled={ticket.status !== "open"}>
               Cancel
             </Button> */}
-              <CancelTicketFormDialog status={ticket.status} />
+              {ticket.status === "open" && <CancelTicketFormDialog status={ticket.status} />}
+
+              {ticket.status === "resolved" && <PrintTicket ticketId={ticket.id} />}
 
               {userSession?.user.role === "support" && ticket.status === "ongoing" ? (
                 <ResolveTicketDialog ticketDetails={ticket} />
