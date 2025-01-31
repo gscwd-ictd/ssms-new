@@ -26,7 +26,7 @@ services:
       - NODE_ENV=production
       - BETTER_AUTH_URL=http://localhost:3000
       - BETTER_AUTH_SECRET=9309a05d754022b31600332cfd9fde5885e470eb43572ba89cca58e0a68ada97
-      - DATABASE_URL=postgres://admin:password@db:5435/ssms
+      - DATABASE_URL=postgres://admin:password@db:5432/ssms
 
 volumes:
   data:
