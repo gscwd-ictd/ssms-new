@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:15
+    container_name: ssms_db
     restart: always
     environment:
       POSTGRES_USER: admin
@@ -12,7 +13,7 @@ services:
       - data:/var/lib/postgresql/data
 
   web:
-    container_name: ssms
+    container_name: ssms_app
     depends_on:
       - db
     build:
