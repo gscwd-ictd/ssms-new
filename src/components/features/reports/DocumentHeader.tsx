@@ -90,7 +90,7 @@ const DocumentHeader: FunctionComponent<DocumentHeaderProps> = ({ teamName }) =>
       <Text style={styles.title}>SERVICE SLIP SUMMARY</Text>
       <Text style={styles.subtitle}>{teamName}</Text>
       <Text style={styles.subtitle}>
-        FOR THE MONTH OF {format(new Date(), "MMMM").toUpperCase()}, {format(new Date(), "yyy")}
+        FOR THE MONTH OF {format(new Date(), "MMMM").toUpperCase()} {format(new Date(), "yyy")}
       </Text>
     </View>
   );

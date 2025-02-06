@@ -61,6 +61,7 @@ export const ticketsHandler = new Hono()
           requestedByAvatar: user.image,
           assignedTo: assignee.name,
           assignedToAvatar: assignee.image,
+          ticketNo: tickets.ticketNo,
           details: tickets.details,
           status: tickets.status,
           createdAt: tickets.createdAt,

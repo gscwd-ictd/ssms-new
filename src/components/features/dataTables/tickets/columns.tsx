@@ -15,6 +15,7 @@ export type MutatedTickets = {
   requestedByAvatar: string | null;
   assignedTo: string | null;
   assignedToAvatar: string | null;
+  ticketNo: string | null;
   details: string;
   status: string;
   createdAt: string;
@@ -26,6 +27,14 @@ export const useTicketsColumns = (data: MutatedTickets[] | undefined) => {
 
   useEffect(() => {
     const cols: ColumnDef<MutatedTickets>[] = [
+      {
+        accessorKey: "ticketNo",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ticket No" />,
+        cell: ({ row }) => <div className="font-mono font-semibold">{row.getValue("ticketNo")}</div>,
+        enableHiding: true,
+        enableColumnFilter: true,
+      },
+
       {
         accessorKey: "requestedBy",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Requested by" />,
