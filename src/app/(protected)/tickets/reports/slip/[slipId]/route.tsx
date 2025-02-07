@@ -246,7 +246,7 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
               <Text>Date Requested</Text>
             </View>
             <View style={[styles.cell, { flex: 1, borderRightWidth: 0 }]}>
-              <Text>{formatInTimeZone(data.dateRequested, "Asia/Manila", "MMM d, yyyy, h:mm a")}</Text>
+              <Text>{formatInTimeZone(data.dateRequested, "Asia/Manila", "MMM d, yyyy")}</Text>
             </View>
           </View>
 
@@ -261,7 +261,7 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
               <Text>Date Accomplished</Text>
             </View>
             <View style={[styles.cell, { flex: 1, borderRightWidth: 0 }]}>
-              <Text>{formatInTimeZone(data.dateAccomplished, "Asia/Manila", "MMM d, yyyy, h:mm a")}</Text>
+              <Text>{formatInTimeZone(data.dateAccomplished, "Asia/Manila", "MMM d, yyyy")}</Text>
             </View>
           </View>
         </View>
