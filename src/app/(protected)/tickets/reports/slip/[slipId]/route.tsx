@@ -3,7 +3,8 @@ import { Page, Text, View, Document, StyleSheet, renderToStream } from "@react-p
 import { NextResponse } from "next/server";
 import axios from "axios";
 import ServiceSlipDocumentHeader from "@ssms/components/features/reports/ServiceSlipDocumentHeader";
-import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
+
 // import ServiceSlipDocumentHeader from "@ssms/components/features/reports/ServiceSlipDocumentHeader";
 
 // Create styles
@@ -245,7 +246,7 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
               <Text>Date Requested</Text>
             </View>
             <View style={[styles.cell, { flex: 1, borderRightWidth: 0 }]}>
-              <Text>{format(data.dateRequested, "MMM d, yyyy, h:mm a")}</Text>
+              <Text>{formatInTimeZone(data.dateRequested, "Asia/Manila", "MMM d, yyyy, h:mm a")}</Text>
             </View>
           </View>
 
@@ -260,7 +261,7 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
               <Text>Date Accomplished</Text>
             </View>
             <View style={[styles.cell, { flex: 1, borderRightWidth: 0 }]}>
-              <Text>{format(data.dateRequested, "MMM d, yyyy, h:mm a")}</Text>
+              <Text>{formatInTimeZone(data.dateAccomplished, "Asia/Manila", "MMM d, yyyy, h:mm a")}</Text>
             </View>
           </View>
         </View>
