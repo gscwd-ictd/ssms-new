@@ -183,9 +183,9 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
       month: "short",
       day: "numeric",
       year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
+      // hour: "numeric",
+      // minute: "numeric",
+      // hour12: true,
     });
   };
 
