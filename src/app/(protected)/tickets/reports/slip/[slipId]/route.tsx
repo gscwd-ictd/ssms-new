@@ -3,6 +3,7 @@ import { Page, Text, View, Document, StyleSheet, renderToStream } from "@react-p
 import { NextResponse } from "next/server";
 import axios from "axios";
 import ServiceSlipDocumentHeader from "@ssms/components/features/reports/ServiceSlipDocumentHeader";
+import { format } from "date-fns";
 // import ServiceSlipDocumentHeader from "@ssms/components/features/reports/ServiceSlipDocumentHeader";
 
 // Create styles
@@ -177,17 +178,17 @@ type ServiceRequestSlipProps = {
 
 // Create Document Component
 const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      // hour: "numeric",
-      // minute: "numeric",
-      // hour12: true,
-    });
-  };
+  // const formatDate = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleString("en-US", {
+  //     month: "short",
+  //     day: "numeric",
+  //     year: "numeric",
+  //     // hour: "numeric",
+  //     // minute: "numeric",
+  //     // hour12: true,
+  //   });
+  // };
 
   return (
     <Document>
@@ -244,7 +245,7 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
               <Text>Date Requested</Text>
             </View>
             <View style={[styles.cell, { flex: 1, borderRightWidth: 0 }]}>
-              <Text>{formatDate(data.dateAccomplished)}</Text>
+              <Text>{format(data.dateRequested, "MMM d, yyyy, h:mm a")}</Text>
             </View>
           </View>
 
@@ -259,7 +260,7 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
               <Text>Date Accomplished</Text>
             </View>
             <View style={[styles.cell, { flex: 1, borderRightWidth: 0 }]}>
-              <Text>{formatDate(data.dateRequested)}</Text>
+              <Text>{format(data.dateRequested, "MMM d, yyyy, h:mm a")}</Text>
             </View>
           </View>
         </View>
