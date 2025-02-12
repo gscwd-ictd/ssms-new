@@ -1,3 +1,4 @@
+import { AddUserDialog } from "@ssms/components/features/dataTables/users/AddUserDialog";
 import { UsersDataTable } from "@ssms/components/features/dataTables/users/UsersDataTable";
 import { auth } from "@ssms/lib/auth";
 import { Metadata } from "next";
@@ -19,6 +20,7 @@ export default async function Users() {
     <div className="flex flex-col">
       <header className="py-7 flex items-center justify-between">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">Users</h1>
+        <AddUserDialog />
       </header>
 
       <main>

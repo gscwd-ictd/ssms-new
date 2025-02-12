@@ -39,6 +39,24 @@ export const divisionsHandler = new Hono()
       throw new HTTPException(401, { message: "Something went wrong!", cause: error });
     }
   })
+  .get("/departments/:id", async (c) => {
+    const departmentId = c.req.param("id");
+
+    try {
+      const stmt = db
+        .select()
+        .from(division)
+        .where(eq(division.departmentId, departmentId))
+        .prepare("get_all_divisions_with_department_id");
+
+      const res = await stmt.execute();
+
+      return c.json(res);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
+  })
   .post("/", zValidator("form", DivisionSchema), async (c) => {
     try {
       const body = c.req.valid("form");
