@@ -1,4 +1,3 @@
-import { endOfMonth, startOfMonth } from "date-fns";
 import { NextResponse } from "next/server";
 import { renderToStream, Document, Page, StyleSheet } from "@react-pdf/renderer";
 import { FunctionComponent } from "react";
@@ -12,9 +11,11 @@ import DocumentHeader from "@ssms/components/features/reports/DocumentHeader";
 import { DocumentFooter } from "@ssms/components/features/reports/DocumentFooter";
 import { auth } from "@ssms/lib/auth";
 import { headers } from "next/headers";
+import { format } from "date-fns";
 
 type MonthlyTicketSummaryProps = {
   tickets: MonthlyTicketSummary[];
+  month: string;
   teamName: string;
   supportStaff: {
     name: string;
@@ -32,6 +33,7 @@ const MonthlyTicketSummaryPDF: FunctionComponent<MonthlyTicketSummaryProps> = ({
   tickets,
   teamName,
   supportStaff,
+  month,
 }) => {
   const totalRequests = tickets.length;
   const totalAccomplished = tickets.filter((ticket) => ticket.status === "resolved").length;
@@ -39,7 +41,7 @@ const MonthlyTicketSummaryPDF: FunctionComponent<MonthlyTicketSummaryProps> = ({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <DocumentHeader teamName={teamName} />
+        <DocumentHeader teamName={teamName} month={month} />
         <TicketsMonthlySummaryTable tickets={tickets} />
         <DocumentFooter
           accomplishedRequests={totalAccomplished}
@@ -52,9 +54,16 @@ const MonthlyTicketSummaryPDF: FunctionComponent<MonthlyTicketSummaryProps> = ({
   );
 };
 
-export async function GET() {
-  const fromDate = startOfMonth(new Date());
-  const toDate = endOfMonth(new Date());
+export async function GET(req: Request) {
+  const requestUrl = new URL(req.url);
+  const from = requestUrl.searchParams.get("from") as string;
+  const to = requestUrl.searchParams.get("to") as string;
+
+  // const fromDate = startOfMonth(new Date());
+  // const toDate = endOfMonth(new Date());
+
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
   const session = await auth.api.getSession({ headers: await headers() });
 
   const tickets = (
@@ -71,6 +80,7 @@ export async function GET() {
 
   const stream = await renderToStream(
     <MonthlyTicketSummaryPDF
+      month={`${format(new Date(fromDate), "MMMM").toUpperCase()} ${format(new Date(fromDate), "yyy")}`}
       tickets={tickets}
       teamName={teamName}
       supportStaff={{
