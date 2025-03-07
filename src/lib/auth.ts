@@ -50,7 +50,7 @@ export const auth = betterAuth({
     cookiePrefix: "ssms",
   },
 
-  trustedOrigins: ["http://172.20.110.45:3000", "http://ssms.gscwd.app"],
+  trustedOrigins: ["http://172.20.110.45:3000", "https://ssms.gscwd.app"],
 
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
