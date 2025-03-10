@@ -134,4 +134,33 @@ export const dashboardHandler = new Hono()
       console.error(error);
       throw new HTTPException(400, { message: "Something went wrong!", cause: error });
     }
+  })
+  .get("/ticket-categories", async (c) => {
+    try {
+      const res = await db
+        .select({
+          categoryName: categories.name,
+          count: count(tickets.id),
+        })
+        .from(tickets)
+        .leftJoin(categories, eq(tickets.categoryId, categories.id))
+        .groupBy(categories.name);
+
+      // Format for chart display with colors
+      const chartData = res.map((item, index) => {
+        // You could store colors in your DB or use a predefined color map
+        const colors = ["#0ea5e9", "#f59e0b", "#10b981", "#6366f1", "#ec4899"];
+
+        return {
+          name: item.categoryName,
+          value: Number(item.count),
+          color: colors[index % colors.length],
+        };
+      });
+
+      return c.json(chartData);
+    } catch (error) {
+      console.error(error);
+      throw new HTTPException(400, { message: "Something went wrong!", cause: error });
+    }
   });
