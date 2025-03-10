@@ -1,5 +1,6 @@
 import { DashboardDateRangeFilter } from "@ssms/components/features/dashboardCards/DashboardDateRangeFilter";
 import { MonthlyTicketLoad } from "@ssms/components/features/dashboardCards/MonthlyTicketLoad";
+import OrgTicketsChart from "@ssms/components/features/dashboardCards/OrgTicketsChart";
 import { StatusCard } from "@ssms/components/features/dashboardCards/StatusCard";
 import { TicketAssignment } from "@ssms/components/features/dashboardCards/TicketAssignment";
 import TicketCategoryChart from "@ssms/components/features/dashboardCards/TicketCategoryChart";
@@ -28,7 +29,10 @@ export default async function Dashboard() {
       </div>
       <StatusCard />
 
-      <TicketCategoryChart />
+      <div className="grid grid-cols-2 gap-4">
+        <TicketCategoryChart />
+        <OrgTicketsChart />
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <WeeklyTicketVolume />
