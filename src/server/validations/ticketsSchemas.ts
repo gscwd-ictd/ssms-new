@@ -49,7 +49,9 @@ export const ResolveTicketsSchema = z.object({
   status: z.enum(["open", "closed", "ongoing", "cancelled", "resolved"]).optional(),
   details: z.string().optional(),
   assessment: z.string().optional(),
-  action: z.string().optional(),
+  action: z
+    .string()
+    .min(5, { message: "Please indicate the actions you have taken in order to resolve the ticket." }),
   resolvedAt: z.string().optional(),
 });
 
