@@ -1,7 +1,7 @@
 import { db } from "@ssms/lib/drizzle";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { aliasedTable, and, between, eq, inArray } from "drizzle-orm";
+import { aliasedTable, and, between, eq, inArray, asc } from "drizzle-orm";
 import { user } from "../db/schemas/auth";
 import { categories, subCategories, supportTypes, tickets } from "../db/schemas/tickets";
 import { categoryAssignments, teamAssignments } from "../db/schemas/teams";
@@ -16,7 +16,7 @@ export const reportsHandler = new Hono()
     const fromDate = new Date(from as string);
     const toDate = new Date(to as string);
 
-    const assignee = aliasedTable(user, "asignee");
+    const assignee = aliasedTable(user, "assignee");
     const ca = aliasedTable(categories, "ca");
     const sc = aliasedTable(subCategories, "sc");
     const su = aliasedTable(supportTypes, "su");
@@ -58,9 +58,8 @@ export const reportsHandler = new Hono()
         .leftJoin(ca, eq(ca.id, tickets.categoryId))
         .leftJoin(sc, eq(sc.id, tickets.subCategoryId))
         .leftJoin(su, eq(su.id, tickets.supportTypeId))
-        .where(
-          and(inArray(tickets.categoryId, teamCategories), between(tickets.createdAt, fromDate, toDate))
-        );
+        .where(and(inArray(tickets.categoryId, teamCategories), between(tickets.createdAt, fromDate, toDate)))
+        .orderBy(asc(tickets.createdAt));
 
       return c.json(res);
     } catch (error) {

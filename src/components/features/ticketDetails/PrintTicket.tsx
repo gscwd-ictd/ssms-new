@@ -2,7 +2,7 @@
 
 import { Button } from "@ssms/components/ui/button";
 import { PrinterCheck } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { FunctionComponent } from "react";
 
 type PrintTicketProps = {
@@ -10,12 +10,12 @@ type PrintTicketProps = {
 };
 
 export const PrintTicket: FunctionComponent<PrintTicketProps> = ({ ticketId }) => {
-  const router = useRouter();
-
   return (
-    <Button variant="secondary" onClick={() => router.push(`/tickets/reports/slip/${ticketId}`)}>
-      <PrinterCheck />
-      <span>Print Ticket</span>
-    </Button>
+    <Link href={`/tickets/reports/slip/${ticketId}`} target="_blank">
+      <Button variant="secondary">
+        <PrinterCheck />
+        <span>Print Ticket</span>
+      </Button>
+    </Link>
   );
 };

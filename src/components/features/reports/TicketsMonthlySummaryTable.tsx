@@ -129,8 +129,19 @@ const PDFData: React.FC<PDFDataProps> = ({ data }) => (
         <PDFCell>{row.subCategory}</PDFCell>
         <PDFCell>{row.supportType}</PDFCell>
         <PDFCell>{format(row.requestedAt, "MMMM d, yyyy")}</PDFCell>
-        <PDFCell>{row.resolvedAt ? format(row.resolvedAt, "MMMM d, yyyy") : "-"}</PDFCell>
-        <PDFCell isLast>{row.assignedTo || "-"}</PDFCell>
+
+        <PDFCell>
+          {row.status !== "cancelled" && row.resolvedAt
+            ? format(row.resolvedAt, "MMMM d, yyyy")
+            : row.status === "cancelled"
+            ? "Cancelled"
+            : row.status === "open"
+            ? "Open"
+            : "-"}
+        </PDFCell>
+        <PDFCell isLast>
+          {row.assignedTo !== null ? row.assignedTo : row.assignedTo === null ? "Unassigned" : "-"}
+        </PDFCell>
       </PDFRow>
     ))}
   </>
