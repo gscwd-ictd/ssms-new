@@ -190,7 +190,7 @@ export const TicketSummary: FunctionComponent = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground">Assgned to:</Label>
+                        <Label className="text-muted-foreground">Assigned to:</Label>
                         {ticket.assignedToName ? (
                           <>
                             <div className="flex items-center gap-2">

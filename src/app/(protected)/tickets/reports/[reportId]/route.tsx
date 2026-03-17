@@ -67,7 +67,7 @@ export async function GET(req: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
 
   const tickets = (
-    await axios.get<MonthlyTicketSummary[]>(
+    await axios.get(
       `${process.env.BETTER_AUTH_URL}/api/v1/reports/${session?.user.id}?from=${fromDate}&to=${toDate}`
     )
   ).data;

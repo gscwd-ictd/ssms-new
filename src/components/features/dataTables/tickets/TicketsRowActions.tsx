@@ -9,15 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@ssms/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type TicketsRowActionsProps = {
   ticketId: string;
 };
 
 export const TicketsRowActions: FunctionComponent<TicketsRowActionsProps> = ({ ticketId }) => {
-  const router = useRouter();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,7 +25,11 @@ export const TicketsRowActions: FunctionComponent<TicketsRowActionsProps> = ({ t
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => router.push(`/tickets/${ticketId}`)}>View Details</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={`/tickets/${ticketId}`} target="_blank">
+            View Details
+          </Link>
+        </DropdownMenuItem>
         {/* <DropdownMenuItem>Assign Ticket</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
