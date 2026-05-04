@@ -44,12 +44,18 @@ interface PDFDataProps {
   data: MonthlyTicketSummary[];
 }
 
+interface TicketsMonthlySummaryProps {
+  tickets: MonthlyTicketSummary[];
+  isFirstPage?: boolean;
+}
+
 // Define styles
 const styles = StyleSheet.create({
   table: {
     width: "auto",
-    margin: 10,
+    marginTop: 10,
     borderWidth: 1,
+    borderColor: "#000",
   },
   tableRow: {
     flexDirection: "row",
@@ -57,6 +63,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#000",
     borderBottomStyle: "solid",
+    height: 30,
   },
   tableRowLast: {
     flexDirection: "row",
@@ -128,11 +135,10 @@ const PDFData: React.FC<PDFDataProps> = ({ data }) => (
         <PDFCell>{row.category}</PDFCell>
         <PDFCell>{row.subCategory}</PDFCell>
         <PDFCell>{row.supportType}</PDFCell>
-        <PDFCell>{format(row.requestedAt, "MMMM d, yyyy")}</PDFCell>
-
+        <PDFCell>{format(new Date(row.requestedAt), "MMMM d, yyyy")}</PDFCell>
         <PDFCell>
           {row.status !== "cancelled" && row.resolvedAt
-            ? format(row.resolvedAt, "MMMM d, yyyy")
+            ? format(new Date(row.resolvedAt), "MMMM d, yyyy")
             : row.status === "cancelled"
             ? "Cancelled"
             : row.status === "open"
@@ -148,21 +154,23 @@ const PDFData: React.FC<PDFDataProps> = ({ data }) => (
 );
 
 // Main component
-interface TicketsMonthlySummaryProps {
-  tickets: MonthlyTicketSummary[];
-}
-
-export const TicketsMonthlySummaryTable: FunctionComponent<TicketsMonthlySummaryProps> = ({ tickets }) => (
+export const TicketsMonthlySummaryTable: FunctionComponent<TicketsMonthlySummaryProps> = ({
+  tickets,
+  isFirstPage = true,
+}) => (
   <PDFTable>
-    <PDFHeader>
-      <PDFHeaderCell>END-USER</PDFHeaderCell>
-      <PDFHeaderCell>CATEGORY</PDFHeaderCell>
-      <PDFHeaderCell>SUBCATEGORY</PDFHeaderCell>
-      <PDFHeaderCell>TYPE</PDFHeaderCell>
-      <PDFHeaderCell>REQUESTED</PDFHeaderCell>
-      <PDFHeaderCell>ACCOMPLISHED</PDFHeaderCell>
-      <PDFHeaderCell isLast>ASSIGNED TO</PDFHeaderCell>
-    </PDFHeader>
+    {/* Only show header on the first page */}
+    {isFirstPage && (
+      <PDFHeader>
+        <PDFHeaderCell>END-USER</PDFHeaderCell>
+        <PDFHeaderCell>CATEGORY</PDFHeaderCell>
+        <PDFHeaderCell>SUBCATEGORY</PDFHeaderCell>
+        <PDFHeaderCell>TYPE</PDFHeaderCell>
+        <PDFHeaderCell>REQUESTED</PDFHeaderCell>
+        <PDFHeaderCell>ACCOMPLISHED</PDFHeaderCell>
+        <PDFHeaderCell isLast>ASSIGNED TO</PDFHeaderCell>
+      </PDFHeader>
+    )}
     <PDFData data={tickets} />
   </PDFTable>
 );

@@ -15,12 +15,18 @@ export const DateRangeFilter: FunctionComponent = () => {
     from: startOfMonth(new Date()),
     to: addDays(new Date(), +1),
   });
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const setDateFilter = useDateFilter((state) => state.setDateFilter);
 
+  const handleFilterClick = () => {
+    setDateFilter(date);
+    setIsPopoverOpen(false);
+  };
+
   return (
     <div className={cn("grid gap-2")}>
-      <Popover>
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
           <Button
             id="date"
@@ -52,7 +58,7 @@ export const DateRangeFilter: FunctionComponent = () => {
           />
 
           <div className="p-5">
-            <Button variant="secondary" onClick={() => setDateFilter(date)}>
+            <Button variant="secondary" onClick={handleFilterClick}>
               Filter
             </Button>
           </div>

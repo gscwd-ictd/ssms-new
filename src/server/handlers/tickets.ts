@@ -1,5 +1,5 @@
 import { db } from "@ssms/lib/drizzle";
-import { aliasedTable, between, eq } from "drizzle-orm";
+import { aliasedTable, eq, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { categories, subCategories, supportTypes, tickets } from "../db/schemas/tickets";
 import { HTTPException } from "hono/http-exception";
@@ -17,7 +17,7 @@ import { takeUniqueOrThrow } from "../utils/takeUniqueOrThrow";
 export const ticketsHandler = new Hono()
   .get("/", async (c) => {
     try {
-      const assignee = aliasedTable(user, "asignee");
+      const assignee = aliasedTable(user, "assignee");
 
       const stmt = db
         .select({
@@ -45,13 +45,17 @@ export const ticketsHandler = new Hono()
     }
   })
   .get("/range", async (c) => {
-    const assignee = aliasedTable(user, "asignee");
+    const assignee = aliasedTable(user, "assignee");
 
     const from = c.req.query("from");
     const to = c.req.query("to");
 
     const fromDate = new Date(from as string);
     const toDate = new Date(to as string);
+
+    // Add 1 day to toDate
+    const toDateEnd = new Date(toDate);
+    toDateEnd.setDate(toDateEnd.getDate() + 1);
 
     try {
       const stmt = db
@@ -70,7 +74,9 @@ export const ticketsHandler = new Hono()
         .from(tickets)
         .innerJoin(user, eq(user.id, tickets.requestorId))
         .leftJoin(assignee, eq(assignee.id, tickets.assignedId))
-        .where(between(tickets.createdAt, fromDate, toDate))
+        // .where(between(tickets.createdAt, fromDate, toDate))
+        .where(sql`tickets.created_at >= ${fromDate} and tickets.created_at < ${toDateEnd}`)
+
         .prepare("get_all_tickets_filter_by_date_range");
 
       const res = await stmt.execute();
@@ -84,7 +90,7 @@ export const ticketsHandler = new Hono()
   .get("/:id", async (c) => {
     const ticketId = c.req.param("id");
 
-    const assignee = aliasedTable(user, "asignee");
+    const assignee = aliasedTable(user, "assignee");
     const ca = aliasedTable(categories, "ca");
     const sc = aliasedTable(subCategories, "sc");
     const su = aliasedTable(supportTypes, "su");
@@ -321,7 +327,7 @@ export const ticketsHandler = new Hono()
     const userId = c.req.param("id");
 
     try {
-      const assignee = aliasedTable(user, "asignee");
+      const assignee = aliasedTable(user, "assignee");
 
       const stmt = db
         .select({
