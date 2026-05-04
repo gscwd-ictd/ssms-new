@@ -1,7 +1,7 @@
 import { db } from "@ssms/lib/drizzle";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { aliasedTable, and, between, eq, inArray, asc } from "drizzle-orm";
+import { aliasedTable, and, eq, inArray, asc, sql } from "drizzle-orm";
 import { user } from "../db/schemas/auth";
 import { categories, subCategories, supportTypes, tickets } from "../db/schemas/tickets";
 import { categoryAssignments, teamAssignments } from "../db/schemas/teams";
@@ -37,6 +37,10 @@ export const reportsHandler = new Hono()
         .from(categoryAssignments)
         .where(inArray(categoryAssignments.teamId, userTeams));
 
+      // Add 1 day to toDate
+      const toDateEnd = new Date(toDate);
+      toDateEnd.setDate(toDateEnd.getDate() + 1);
+
       // Get tickets for those categories with all joins
       const res = await db
         .select({
@@ -58,7 +62,13 @@ export const reportsHandler = new Hono()
         .leftJoin(ca, eq(ca.id, tickets.categoryId))
         .leftJoin(sc, eq(sc.id, tickets.subCategoryId))
         .leftJoin(su, eq(su.id, tickets.supportTypeId))
-        .where(and(inArray(tickets.categoryId, teamCategories), between(tickets.createdAt, fromDate, toDate)))
+        .where(
+          and(
+            inArray(tickets.categoryId, teamCategories),
+            //  between(tickets.createdAt, fromDate, toDate),
+            sql`tickets.created_at >= ${fromDate} and tickets.created_at < ${toDateEnd}`
+          )
+        )
         .orderBy(asc(tickets.createdAt));
 
       return c.json(res);
