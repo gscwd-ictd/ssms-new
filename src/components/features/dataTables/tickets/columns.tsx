@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@ssms/components/ui/avatar";
 import { DataTableColumnHeader } from "@ssms/components/ui/data-table/data-table-column-header";
 import { ColumnDef } from "@tanstack/react-table";
-import { formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import { TicketsRowActions } from "./TicketsRowActions";
 import { AssignedToColumn } from "./AssignedToColumn";
 import { Circle, CircleCheckBig, CircleOff, Clock4 } from "lucide-react";
@@ -88,9 +88,7 @@ export const useTicketsColumns = (data: MutatedTickets[] | undefined) => {
       },
       {
         accessorKey: "createdAt",
-        accessorFn: (row) => (
-          <>{row.createdAt ? formatDistanceToNow(row.createdAt, { addSuffix: true }) : ""}</>
-        ),
+        accessorFn: (row) => <>{row.createdAt ? format(row.createdAt, "MMM dd, yyyy HH:mm a") : ""}</>,
         header: ({ column }) => <DataTableColumnHeader column={column} title="Requested at" />,
         cell: ({ row }) => <div className="text-muted-foreground">{row.getValue("createdAt")}</div>,
         enableSorting: false,

@@ -55,6 +55,7 @@ export const reportsHandler = new Hono()
           resolvedAt: tickets.resolvedAt,
           assignedTo: assignee.name,
           status: tickets.status,
+          ticketNo: tickets.ticketNo,
         })
         .from(tickets)
         .innerJoin(user, eq(user.id, tickets.requestorId))

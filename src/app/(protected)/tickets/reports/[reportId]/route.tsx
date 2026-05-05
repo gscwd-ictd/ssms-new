@@ -14,8 +14,8 @@ import { headers } from "next/headers";
 import { format } from "date-fns";
 import { TicketSummaryAndSignatories } from "@ssms/components/features/reports/TicketSummaryAndSignatories";
 
-const FIRST_PAGE_ROW_COUNT = 20;
-const NORMAL_PAGES_ROW_COUNT = 22;
+const FIRST_PAGE_ROW_COUNT = 18;
+const NORMAL_PAGES_ROW_COUNT = 20;
 
 type MonthlyTicketSummaryProps = {
   tickets: MonthlyTicketSummary[];
