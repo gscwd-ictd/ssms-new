@@ -342,7 +342,9 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
             <Text style={styles.signatureText}>Accomplished by</Text>
           </View>
           <View style={styles.signatureBlock}>
-            <Text style={styles.signatureName}>Michael G. Gabales, REE</Text>
+            <Text style={styles.signatureName}>
+              {data.category == "Software" ? "Michael G. Gabales, REE" : "Phyll Patrick C. Fragata"}
+            </Text>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureText}>Checked by</Text>
           </View>
