@@ -191,6 +191,22 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
   //   });
   // };
 
+  const supporters = [
+    "Kier John D. Flores",
+    "Roland N. Bacayo",
+    "Phyll Patrick C. Fragata",
+    "John Dave V. Datahan",
+  ];
+
+  const checkedBy =
+    data.category === "Document"
+      ? supporters.includes(data.accomplishedBy)
+        ? "Phyll Patrick C. Fragata"
+        : "Michael G. Gabales, REE"
+      : data.category === "Hardware"
+      ? "Phyll Patrick C. Fragata"
+      : "Michael G. Gabales, REE";
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -342,9 +358,7 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
             <Text style={styles.signatureText}>Accomplished by</Text>
           </View>
           <View style={styles.signatureBlock}>
-            <Text style={styles.signatureName}>
-              {data.category != "Software" ? "Phyll Patrick C. Fragata" : "Michael G. Gabales, REE"}
-            </Text>
+            <Text style={styles.signatureName}>{checkedBy}</Text>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureText}>Checked by</Text>
           </View>

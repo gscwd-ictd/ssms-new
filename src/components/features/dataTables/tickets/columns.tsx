@@ -88,7 +88,7 @@ export const useTicketsColumns = (data: MutatedTickets[] | undefined) => {
       },
       {
         accessorKey: "createdAt",
-        accessorFn: (row) => <>{row.createdAt ? format(row.createdAt, "MMM dd, yyyy HH:mm a") : ""}</>,
+        accessorFn: (row) => <>{row.createdAt ? format(row.createdAt, "MMM dd, yyyy h:mm a") : ""}</>,
         header: ({ column }) => <DataTableColumnHeader column={column} title="Requested at" />,
         cell: ({ row }) => <div className="text-muted-foreground">{row.getValue("createdAt")}</div>,
         enableSorting: false,
