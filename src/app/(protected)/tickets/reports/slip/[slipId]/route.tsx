@@ -191,21 +191,34 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
   //   });
   // };
 
-  const supporters = [
+  const hardwareTeam = [
     "Kier John D. Flores",
     "Roland N. Bacayo",
     "Phyll Patrick C. Fragata",
     "John Dave V. Datahan",
+    "Kathleen Roma O. Pono",
   ];
 
-  const checkedBy =
-    data.category === "Document"
-      ? supporters.includes(data.accomplishedBy)
+  const getCheckedBy = (data: ServiceRequestSlipProps["data"]) => {
+    if (data.category === "Document") {
+      if (data.subCategory === "Request Letter") return "Michael G. Gabales, REE";
+      return hardwareTeam.includes(data.accomplishedBy)
         ? "Phyll Patrick C. Fragata"
-        : "Michael G. Gabales, REE"
-      : data.category === "Hardware"
-      ? "Phyll Patrick C. Fragata"
-      : "Michael G. Gabales, REE";
+        : "Michael G. Gabales, REE";
+    }
+
+    if (data.category === "Hardware") {
+      return hardwareTeam.includes(data.accomplishedBy)
+        ? "Phyll Patrick C. Fragata"
+        : "Michael G. Gabales, REE";
+    }
+
+    if (data.category === "Software") return "Allyn Joseph C. Cubero";
+
+    return "Michael G. Gabales, REE";
+  };
+
+  const checkedBy = getCheckedBy(data);
 
   return (
     <Document>
