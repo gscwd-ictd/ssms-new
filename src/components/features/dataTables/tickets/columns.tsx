@@ -61,7 +61,7 @@ export const useTicketsColumns = (data: MutatedTickets[] | undefined) => {
           </div>
         ),
         enableHiding: false,
-        enableColumnFilter: false,
+        enableColumnFilter: true,
       },
 
       {
