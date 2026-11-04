@@ -199,6 +199,8 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
     "Kathleen Roma O. Pono",
   ];
 
+  const softwareTeamSupervisors = ["Allyn Joseph C. Cubero"];
+
   const getCheckedBy = (data: ServiceRequestSlipProps["data"]) => {
     if (data.category === "Document") {
       if (data.subCategory === "Request Letter") return "Michael G. Gabales, REE";
@@ -213,7 +215,13 @@ const ServiceRequestSlip: React.FC<ServiceRequestSlipProps> = ({ data }) => {
         : "Michael G. Gabales, REE";
     }
 
-    if (data.category === "Software") return "Allyn Joseph C. Cubero";
+    if (data.category === "Software") {
+      return softwareTeamSupervisors.includes(data.accomplishedBy)
+        ? "Michael G. Gabales, REE"
+        : "Allyn Joseph C. Cubero";
+    }
+
+    // return "Allyn Joseph C. Cubero";
 
     return "Michael G. Gabales, REE";
   };
